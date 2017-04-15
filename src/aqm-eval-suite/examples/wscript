@@ -1,0 +1,46 @@
+# -*- Mode: python; py-indent-offset: 4; indent-tabs-mode: nil; coding: utf-8; -*-
+
+def build(bld):
+
+
+    obj = bld.create_ns3_program('TCPFriendlySameInitCwnd', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
+    obj.source = 'tcp-friendly-same-initcwnd.cc'
+
+    obj = bld.create_ns3_program('TCPFriendlyDifferentInitCwnd', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
+    obj.source = 'tcp-friendly-different-initcwnd.cc'
+
+    obj = bld.create_ns3_program('AggressiveTransportSender', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
+    obj.source = 'aggressive-transport-sender.cc'
+
+    obj = bld.create_ns3_program('HeavyCongestion', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
+    obj.source = 'heavy-congestion.cc'
+
+    obj = bld.create_ns3_program('MediumCongestion', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
+    obj.source = 'medium-congestion.cc'
+
+    obj = bld.create_ns3_program('MildCongestion', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
+    obj.source = 'mild-congestion.cc'
+
+    obj = bld.create_ns3_program('RttFairness', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
+    obj.source = 'rtt-fairness.cc'
+
+    obj = bld.create_ns3_program('UnresponsiveTransport', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
+    obj.source = 'single-unresponsive-transport.cc'
+
+    obj = bld.create_ns3_program('UnresponsiveWithFriendly', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
+    obj.source = 'unresponsive-with-friendly-transport.cc'
+
+    obj = bld.create_ns3_program('VaryingCongestion', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
+    obj.source = 'vary-congestion-level.cc'
+
+    obj = bld.create_ns3_program('VaryingBandwidthUno', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
+    obj.source = 'vary-available-capacity-uno.cc'
+
+    obj = bld.create_ns3_program('VaryingBandwidthDuo', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
+    obj.source = 'vary-available-capacity-duo.cc'
+
+    obj = bld.create_ns3_program('LbeTransportSender', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
+    obj.source = 'LBE-transport-sender.cc'
+
+    obj = bld.create_ns3_program('aqm-eval-suite-runner', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
+    obj.source = 'aqm-eval-suite-runner.cc'
