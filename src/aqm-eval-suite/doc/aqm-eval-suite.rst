@@ -166,3 +166,16 @@ Scope and limitations of the suite
   with Explicit Congestion Notification (ECN) and Scheduling Algorithms.
 
 * Multi-AQM scenarios are not yet supported.
+
+Packages Required for Processing Metrics and Graphing
+*****************************************************
+
+Following are the packages required for the suite and their installation instruction in Ubuntu
+
+* python-pip: apt-get install python-pip
+
+* python numpy: pip install numpy
+
+* gnuplot: apt-get install gnuplot-qt
+
+* imagemagick (optional package for ns-3): apt-get install imagemagick
