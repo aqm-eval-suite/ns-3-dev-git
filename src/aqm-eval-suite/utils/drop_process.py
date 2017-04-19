@@ -55,7 +55,7 @@ gnufile = 'aqm-eval-output/'+scenario_name+"/data/"+queuedisc_name+'-gnu-drop'
 gnu = open(gnufile, "w")
 
 gnu.write("set terminal png size 1260, 800\n")
-gnu.write("set output \"aqm-eval-graph/"+scenario_name+"/graph/"+queuedisc_name+"-drop.png\"\n set xlabel \"Time difference between two drops\"\nset ylabel \"CDF\"\nset grid\nshow grid\n")
+gnu.write("set output \"aqm-eval-output/"+scenario_name+"/graph/"+queuedisc_name+"-drop.png\"\n set xlabel \"Time difference between two drops\"\nset ylabel \"CDF\"\nset grid\nshow grid\n")
 
 
 wfile = open (nfname ,"w")
