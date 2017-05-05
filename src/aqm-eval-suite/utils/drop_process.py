@@ -4,52 +4,52 @@ import numpy as np
 
 scenario_name = sys.argv[1]
 queuedisc_name = sys.argv[2]
-fname = 'aqm-eval-output/'+scenario_name+"/data/"+queuedisc_name+'-drop.dat'
-nfname = 'aqm-eval-output/'+scenario_name+"/data/new-"+queuedisc_name+'-drop.dat'
-f = open (fname ,"r")
-l = f.readlines ()
-l.sort ()
-f.close ()
+file_name = 'aqm-eval-output/'+scenario_name+"/data/"+queuedisc_name+'-drop.dat'
+new_file_name = 'aqm-eval-output/'+scenario_name+"/data/new-"+queuedisc_name+'-drop.dat'
+File = open (file_name ,"r")
+lines_read = File.readlines ()
+lines_read.sort ()
+File.close ()
 i=0
-d=[]
-a=[]
-F3 = []
-for m in l:
-  if i == len(l)-1:
+data=[]
+inst_data=[]
+bucket = []
+for file_iterator in lines_read:
+  if i == len(lines_read)-1:
     break
   i+=1
-  if m.split(' ')[0] == l[i].split(' ')[0]:
-    s1 = float(m.split(' ')[1])
-    d.append(s1)
+  if file_iterator.split(' ')[0] == lines_read[i].split(' ')[0]:
+    temp_string = float(file_iterator.split(' ')[1])
+    data.append(temp_string)
   else:
-   d.sort ()
-   j=1
+   data.sort ()
+   data_iterator=1
 
-   while j < len(d):
-     a.append(d[j]-d[j-1])
-     j+=1
-   hist, bin_edges = np.histogram(a, normed=True, bins=10000, density=True)
+   while data_iterator < len(data):
+     inst_data.append(data[data_iterator]-data[data_iterator-1])
+     data_iterator+=1
+   hist, bin_edges = np.histogram(inst_data, normed=True, bins=10000, density=True)
    dx = bin_edges[1] - bin_edges[0]
-   F1 = np.cumsum(hist)*dx
-   F2 = [[0,0], [bin_edges[0], 0]]
-   for k in range(len(F1)):
-     F2.append([bin_edges[k+1], F1[k]])
-   F3.append(F2)
-   d=[]
+   Function_uno = np.cumsum(hist)*dx
+   Function_duo = [[0,0], [bin_edges[0], 0]]
+   for k in range(len(Function_uno)):
+     Function_duo.append([bin_edges[k+1], Function_uno[k]])
+   bucket.append(Function_duo)
+   data=[]
 
-d.sort ()
-j = 1
-while j < len(d):
-  a.append(d[j]-d[j-1])
-  j+=1
-hist, bin_edges = np.histogram(a, normed=True, bins=10000, density=True)
+data.sort ()
+data_iterator = 1
+while data_iterator < len(data):
+  inst_data.append(data[data_iterator]-data[data_iterator-1])
+  data_iterator+=1
+hist, bin_edges = np.histogram(inst_data, normed=True, bins=10000, density=True)
 dx = bin_edges[1] - bin_edges[0]
-F1 = np.cumsum(hist)*dx
-F2 = [[0,0], [bin_edges[0], 0]]
-for k in range(len(F1)):
-  F2.append([bin_edges[k+1], F1[k]])
-F3.append(F2)
-d=[]
+Function_uno = np.cumsum(hist)*dx
+Function_duo = [[0,0], [bin_edges[0], 0]]
+for k in range(len(Function_uno)):
+  Function_duo.append([bin_edges[k+1], Function_uno[k]])
+bucket.append(Function_duo)
+data=[]
 
 gnufile = 'aqm-eval-output/'+scenario_name+"/data/"+queuedisc_name+'-gnu-drop'
 gnu = open(gnufile, "w")
@@ -58,21 +58,21 @@ gnu.write("set terminal png size 1260, 800\n")
 gnu.write("set output \"aqm-eval-output/"+scenario_name+"/graph/"+queuedisc_name+"-drop.png\"\n set xlabel \"Time difference between two drops\"\nset ylabel \"CDF\"\nset grid\nshow grid\n")
 
 
-wfile = open (nfname ,"w")
+wfile = open (new_file_name ,"w")
 
 flow = 1
-for x in F3:
+for x in bucket:
   wfile.write("\n\n#\"flow"+str(flow)+"\"\n")
   flow+=1
   for y in x:
     wfile.write (str(y[0])+" "+str(y[1])+"\n")
 wfile.close()
 
-for j in range(len(F3)):
-  if j == 0:
-    gnu.write("plot \""+nfname+"\" i "+str(j)+" using 1:2 with lines smooth csplines  title \"Flow "+str(j+1)+"\"")
+for data_iterator in range(len(bucket)):
+  if data_iterator == 0:
+    gnu.write("plot \""+new_file_name+"\" i "+str(data_iterator)+" using 1:2 with lines smooth csplines  title \"Flow "+str(data_iterator+1)+"\"")
   else:
-    gnu.write(", \""+nfname+"\" i "+str(j)+" using 1:2 with lines smooth csplines title \"Flow "+str(j+1)+"\"")
+    gnu.write(", \""+new_file_name+"\" i "+str(data_iterator)+" using 1:2 with lines smooth csplines title \"Flow "+str(data_iterator+1)+"\"")
 
 gnu.close()
 os.system("gnuplot "+gnufile)
