@@ -64,7 +64,7 @@ gnufile = 'aqm-eval-output/'+scenario_name+"/data/"+queuedisc_name+'-gnu-goodput
 gnu = open(gnufile, "w")
 
 gnu.write("set terminal png\n")
-gnu.write("set output \"aqm-eval-output/"+scenario_name+"/graph/"+queuedisc_name+"-goodput.png\"\n set xlabel \"Time (Seconds)\" font \"Verdana\"\nset ylabel \"Goodput (Mbps)\" font \"Verdana,24\"\nset grid\nshow grid\nset key font \",18\"\n")
+gnu.write("set output \"aqm-eval-output/"+scenario_name+"/graph/"+queuedisc_name+"-goodput.png\"\n set xlabel \"Time (Seconds)\" font \"Verdana,12\"\nset ylabel \"Goodput (Mbps)\" font \"Verdana,12\"\nset grid\nshow grid\nset key font \"Verdana,12\"\n")
 
 
 wfile = open (new_file_name ,"w")
