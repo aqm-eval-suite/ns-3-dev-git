@@ -61,7 +61,7 @@ RttFairness::~RttFairness ()
 EvaluationTopology
 RttFairness::CreateScenario (std::string aqm)
 {
-  uint32_t reqDelay = (delay[m_run] - 2) / 2;
+  uint32_t reqDelay = (delay[m_run] - 4) / 4;
   char OWD[20];
   char scenario[20];
   sprintf (OWD, "%dms", reqDelay);
