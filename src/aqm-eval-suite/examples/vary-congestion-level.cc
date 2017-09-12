@@ -44,14 +44,14 @@ protected:
 
 private:
   void PauseApp (EvaluationTopology et, uint32_t flow)
-    {
-      et.Pause (flow);
-    }
+  {
+    et.Pause (flow);
+  }
 
   void restartApp (EvaluationTopology et, uint32_t flow)
-    {
-      et.Restart (flow);
-    }
+  {
+    et.Restart (flow);
+  }
 };
 
 VaryingCongestion::VaryingCongestion ()
@@ -70,7 +70,7 @@ VaryingCongestion::CreateScenario (std::string aqm)
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("48ms"));
   uint32_t nflow = 0.114 * 90;
 
-  EvaluationTopology et ("VaryingCongestion", nflow, pointToPoint, aqm, 1460);
+  EvaluationTopology et ("VaryingCongestion", nflow, pointToPoint, aqm, 698);
   for (uint32_t i = 0; i < nflow; i++)
     {
       ApplicationContainer ac = et.CreateFlow (StringValue ("1ms"),
@@ -81,29 +81,29 @@ VaryingCongestion::CreateScenario (std::string aqm)
 
       ac.Start (Seconds (0));
       ac.Stop (Seconds (300));
-      if (i>0.036*90 && i<0.081*90)
+      if (i > 0.036 * 90 && i < 0.081 * 90)
         {
-          Simulator::Schedule (Seconds(40), &VaryingCongestion::PauseApp, this, et, i);
-          Simulator::Schedule (Seconds(60), &VaryingCongestion::restartApp, this, et, i);
-          Simulator::Schedule (Seconds(100), &VaryingCongestion::PauseApp, this, et, i);
-          Simulator::Schedule (Seconds(120), &VaryingCongestion::restartApp, this, et, i);
-          Simulator::Schedule (Seconds(160), &VaryingCongestion::PauseApp, this, et, i);
-          Simulator::Schedule (Seconds(180), &VaryingCongestion::restartApp, this, et, i);
-          Simulator::Schedule (Seconds(220), &VaryingCongestion::PauseApp, this, et, i);
-          Simulator::Schedule (Seconds(240), &VaryingCongestion::restartApp, this, et, i);
-          Simulator::Schedule (Seconds(280), &VaryingCongestion::PauseApp, this, et, i);
+          Simulator::Schedule (Seconds (40), &VaryingCongestion::PauseApp, this, et, i);
+          Simulator::Schedule (Seconds (60), &VaryingCongestion::restartApp, this, et, i);
+          Simulator::Schedule (Seconds (100), &VaryingCongestion::PauseApp, this, et, i);
+          Simulator::Schedule (Seconds (120), &VaryingCongestion::restartApp, this, et, i);
+          Simulator::Schedule (Seconds (160), &VaryingCongestion::PauseApp, this, et, i);
+          Simulator::Schedule (Seconds (180), &VaryingCongestion::restartApp, this, et, i);
+          Simulator::Schedule (Seconds (220), &VaryingCongestion::PauseApp, this, et, i);
+          Simulator::Schedule (Seconds (240), &VaryingCongestion::restartApp, this, et, i);
+          Simulator::Schedule (Seconds (280), &VaryingCongestion::PauseApp, this, et, i);
         }
-      else if (i>0.036*90 && i<0.114*90)
+      else if (i > 0.036 * 90 && i < 0.114 * 90)
         {
-          Simulator::Schedule (Seconds(20), &VaryingCongestion::PauseApp, this, et, i);
-          Simulator::Schedule (Seconds(60), &VaryingCongestion::restartApp, this, et, i);
-          Simulator::Schedule (Seconds(80), &VaryingCongestion::PauseApp, this, et, i);
-          Simulator::Schedule (Seconds(120), &VaryingCongestion::restartApp, this, et, i);
-          Simulator::Schedule (Seconds(140), &VaryingCongestion::PauseApp, this, et, i);
-          Simulator::Schedule (Seconds(180), &VaryingCongestion::restartApp, this, et, i);
-          Simulator::Schedule (Seconds(200), &VaryingCongestion::PauseApp, this, et, i);
-          Simulator::Schedule (Seconds(240), &VaryingCongestion::restartApp, this, et, i);
-          Simulator::Schedule (Seconds(260), &VaryingCongestion::PauseApp, this, et, i);
+          Simulator::Schedule (Seconds (20), &VaryingCongestion::PauseApp, this, et, i);
+          Simulator::Schedule (Seconds (60), &VaryingCongestion::restartApp, this, et, i);
+          Simulator::Schedule (Seconds (80), &VaryingCongestion::PauseApp, this, et, i);
+          Simulator::Schedule (Seconds (120), &VaryingCongestion::restartApp, this, et, i);
+          Simulator::Schedule (Seconds (140), &VaryingCongestion::PauseApp, this, et, i);
+          Simulator::Schedule (Seconds (180), &VaryingCongestion::restartApp, this, et, i);
+          Simulator::Schedule (Seconds (200), &VaryingCongestion::PauseApp, this, et, i);
+          Simulator::Schedule (Seconds (240), &VaryingCongestion::restartApp, this, et, i);
+          Simulator::Schedule (Seconds (260), &VaryingCongestion::PauseApp, this, et, i);
         }
     }
   return et;
@@ -112,10 +112,12 @@ VaryingCongestion::CreateScenario (std::string aqm)
 int
 main (int argc, char *argv[])
 {
+  std::string QueueDiscMode = "";
   CommandLine cmd;
+  cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
   cmd.Parse (argc, argv);
 
   VaryingCongestion sce;
-  sce.ConfigureQueueDisc (45, 1460, "1Mbps", "48ms");
+  sce.ConfigureQueueDisc (45, 750, "1Mbps", "48ms", QueueDiscMode);
   sce.RunSimulation (Seconds (310));
 }

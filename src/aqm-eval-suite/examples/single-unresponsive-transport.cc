@@ -59,7 +59,7 @@ UnresponsiveTransport::CreateScenario (std::string aqm)
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("48ms"));
   uint32_t nflow = 1;
 
-  EvaluationTopology et ("UnresponsiveTransport", nflow, pointToPoint, aqm, 1460);
+  EvaluationTopology et ("UnresponsiveTransport", nflow, pointToPoint, aqm, 698);
   ApplicationContainer ac = et.CreateFlow (StringValue ("1ms"),
                                            StringValue ("1ms"),
                                            StringValue ("10Mbps"),
@@ -74,10 +74,12 @@ UnresponsiveTransport::CreateScenario (std::string aqm)
 int
 main (int argc, char *argv[])
 {
+  std::string QueueDiscMode = "";
   CommandLine cmd;
+  cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
   cmd.Parse (argc, argv);
 
   UnresponsiveTransport sce;
-  sce.ConfigureQueueDisc (45, 1460, "1Mbps", "48ms");
+  sce.ConfigureQueueDisc (45, 750, "1Mbps", "48ms", QueueDiscMode);
   sce.RunSimulation (Seconds (310));
 }

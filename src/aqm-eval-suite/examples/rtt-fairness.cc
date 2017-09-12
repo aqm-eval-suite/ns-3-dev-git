@@ -72,7 +72,7 @@ RttFairness::CreateScenario (std::string aqm)
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("2ms"));
   uint32_t nflow = 2;
 
-  EvaluationTopology et (scenarioName, nflow, pointToPoint, aqm, 1460);
+  EvaluationTopology et (scenarioName, nflow, pointToPoint, aqm, 698);
   ApplicationContainer ac1 = et.CreateFlow (StringValue ("24ms"),
                                             StringValue ("24ms"),
                                             StringValue ("10Mbps"),
@@ -96,13 +96,15 @@ RttFairness::CreateScenario (std::string aqm)
 int
 main (int argc, char *argv[])
 {
+  std::string QueueDiscMode = "";
   CommandLine cmd;
+  cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
   cmd.Parse (argc, argv);
 
   for (uint32_t i = 0; i < 15; i++)
     {
       RttFairness rf (i);
-      rf.ConfigureQueueDisc (45, 1460, "1Mbps", "2ms");
+      rf.ConfigureQueueDisc (45, 750, "1Mbps", "2ms", QueueDiscMode);
       rf.RunSimulation (Seconds (610));
     }
 }

@@ -56,14 +56,38 @@ EvaluationTopology::EvaluationTopology (std::string ScenarioName, uint32_t numFl
   tch.Uninstall (m_dumbbell.GetLeft ()->GetDevice (0));
 
   m_currentAQM = queueDisc;
-  if (queueDisc == "ns3::AdaptiveRedQueueDisc")
+  if (queueDisc == "ns3::AdaptiveRedQueueDisc" || queueDisc == "ns3::FengAdaptiveRedQueueDisc" || queueDisc == "ns3::NonLinearRedQueueDisc")
     {
       queueDisc = "ns3::RedQueueDisc";
-      Config::SetDefault ("ns3::RedQueueDisc::ARED", BooleanValue (true));
+      tch.SetRootQueueDisc (queueDisc.c_str ());
+      m_queue = tch.Install (m_dumbbell.GetLeft ()->GetDevice (0)).Get (0);
+      if (m_currentAQM == "ns3::AdaptiveRedQueueDisc")
+        {
+          m_queue->SetAttribute ("ARED", BooleanValue (true));
+        }
+      else if (m_currentAQM == "ns3::FengAdaptiveRedQueueDisc")
+        {
+          m_queue->SetAttribute ("FengAdaptive", BooleanValue (true));
+        }
+      else if (m_currentAQM == "ns3::NonLinearRedQueueDisc")
+        {
+          m_queue->SetAttribute ("NLRED", BooleanValue (true));
+        }
     }
-  tch.SetRootQueueDisc (queueDisc.c_str ());
+  else
+    {
+      tch.SetRootQueueDisc (queueDisc.c_str ());
+      m_queue = tch.Install (m_dumbbell.GetLeft ()->GetDevice (0)).Get (0);
+    }
 
-  m_queue = tch.Install (m_dumbbell.GetLeft ()->GetDevice (0)).Get (0);
+  if (queueDisc == "ns3::RedQueueDisc")
+    {
+      StaticCast<RedQueueDisc> (m_queue)->AssignStreams (0);
+    }
+  else if (queueDisc == "ns3::PieQueueDisc")
+    {
+      StaticCast<PieQueueDisc> (m_queue)->AssignStreams (0);
+    }
   m_queue->TraceConnectWithoutContext ("Enqueue", MakeCallback (&EvaluationTopology::PacketEnqueue, this));
   m_queue->TraceConnectWithoutContext ("Dequeue", MakeCallback (&EvaluationTopology::PacketDequeue, this));
   m_queue->TraceConnectWithoutContext ("Drop", MakeCallback (&EvaluationTopology::PacketDrop, this));
@@ -265,6 +289,7 @@ EvaluationTopology::CreateFlow (StringValue senderDelay, StringValue receiverDel
 
   Ptr<Socket> ns3TcpSocket = Socket::CreateSocket (m_dumbbell.GetLeft (m_flowsAdded - 1), TcpSocketFactory::GetTypeId ());
   ns3TcpSocket->SetAttribute ("InitialCwnd", UintegerValue (initCwnd));
+  ns3TcpSocket->SetAttribute ("SegmentSize", UintegerValue (m_packetSize));
 
   if (transport_prot.compare ("ns3::TcpNewReno") == 0)
     {
