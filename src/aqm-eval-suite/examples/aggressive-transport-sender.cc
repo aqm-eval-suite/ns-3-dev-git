@@ -43,6 +43,7 @@ public:
 protected:
   virtual EvaluationTopology CreateScenario (std::string aqm);
 };
+std::string AggressiveTcpVariant = "ns3::TcpBic";
 
 AggressiveTransportSender::AggressiveTransportSender ()
 {
@@ -60,12 +61,12 @@ AggressiveTransportSender::CreateScenario (std::string aqm)
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("48ms"));
   uint32_t nflow = 1;
 
-  EvaluationTopology et ("AggressiveTransportSender", nflow, pointToPoint, aqm, 1460);
+  EvaluationTopology et ("AggressiveTransportSender", nflow, pointToPoint, aqm, 698);
   ApplicationContainer ac = et.CreateFlow (StringValue ("1ms"),
                                            StringValue ("1ms"),
                                            StringValue ("10Mbps"),
                                            StringValue ("10Mbps"),
-                                           "ns3::TcpBic", 0, DataRate ("10Mb/s"), 3);
+                                           AggressiveTcpVariant, 0, DataRate ("10Mb/s"), 3);
 
   ac.Start (Seconds (0));
   ac.Stop (Seconds (300));
@@ -75,10 +76,17 @@ AggressiveTransportSender::CreateScenario (std::string aqm)
 int
 main (int argc, char *argv[])
 {
+  std::string QueueDiscMode = "";
+  std::string TcpVariant = "";
   CommandLine cmd;
+  cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
+  cmd.AddValue ("TcpVariant", "Aggressive TCP variant", TcpVariant);
   cmd.Parse (argc, argv);
-
+  if ((TcpVariant == "ns3::TcpYeah") || (TcpVariant == "ns3::TcpBic") || (TcpVariant == "ns3::TcpHighSpeed") || (TcpVariant == "ns3::TcpIllinois") || (TcpVariant == "ns3::TcpScalable") || (TcpVariant == "ns3::TcpHtcp"))
+    {
+      AggressiveTcpVariant = TcpVariant;
+    }
   AggressiveTransportSender sce;
-  sce.ConfigureQueueDisc (45, 1460, "1Mbps", "48ms");
+  sce.ConfigureQueueDisc (45, 750, "1Mbps", "48ms", QueueDiscMode);
   sce.RunSimulation (Seconds (310));
 }

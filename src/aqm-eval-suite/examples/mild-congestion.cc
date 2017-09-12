@@ -59,7 +59,7 @@ MildCongestion::CreateScenario (std::string aqm)
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("45ms"));
   uint32_t nflow = 0.036 * 90;
 
-  EvaluationTopology et ("MildCongestion", nflow, pointToPoint, aqm);
+  EvaluationTopology et ("MildCongestion", nflow, pointToPoint, aqm, 698);
   for (uint32_t i = 0; i < nflow; i++)
     {
       ApplicationContainer ac = et.CreateFlow (StringValue ("1ms"),
@@ -77,10 +77,12 @@ MildCongestion::CreateScenario (std::string aqm)
 int
 main (int argc, char *argv[])
 {
+  std::string QueueDiscMode = "";
   CommandLine cmd;
+  cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
   cmd.Parse (argc, argv);
 
   MildCongestion sce;
-  sce.ConfigureQueueDisc (45, 1460, "1Mbps", "48ms");
+  sce.ConfigureQueueDisc (45, 750, "1Mbps", "48ms", QueueDiscMode);
   sce.RunSimulation (Seconds (310));
 }

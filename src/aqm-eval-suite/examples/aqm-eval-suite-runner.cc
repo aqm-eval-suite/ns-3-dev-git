@@ -35,21 +35,34 @@ std::vector<std::string> AQM = {
 "CoDel",
 "Pie",
 "Red",
-"AdaptiveRed"
+"AdaptiveRed",
+"FengAdaptiveRed",
+"NonLinearRed"
 };
 std::string queueDisc = "QueueDisc";
-uint32_t nAQM = 5;
+uint32_t nAQM = 7;
+std::string AggressiveTcp = "";
+std::string QueueDiscMode = "QUEUE_DISC_MODE_PACKETS";
 
 void RunOneScenario (std::string scenarioName)
 {
   mkdir ((std::string ("aqm-eval-output/") + scenarioName).c_str (), 0700);
   mkdir ((std::string ("aqm-eval-output/") + scenarioName + (std::string ("/data"))).c_str (), 0700);
   mkdir ((std::string ("aqm-eval-output/") + scenarioName + (std::string ("/graph"))).c_str (), 0700);
-  std::string commandToRun = std::string ("./waf --run ") + scenarioName;
+  std::string commandToRun;
+  if (AggressiveTcp != "" && scenarioName == "AggressiveTransportSender")
+    {
+      commandToRun = std::string ("./waf --run \"") + scenarioName + std::string (" --TcpVariant=ns3::") + AggressiveTcp + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string ("\"");
+    }
+  else
+    {
+      commandToRun = std::string ("./waf --run \"") + scenarioName + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string ("\"");
+    }
   system (commandToRun.c_str ());
   std::ofstream outfile;
   outfile.open ((std::string ("aqm-eval-output/") + scenarioName + std::string ("/data/plot-shell")).c_str (), std::ios::out | std::ios::trunc);
-  outfile << "set terminal png size 500, 350\n";
+  outfile << "set terminal png size 600, 350\n";
+  outfile << "set size .9, 1\n";
   outfile << "set output \"aqm-eval-output/" << scenarioName.c_str () << "/graph/qdel-goodput.png\"\n set xlabel \"Queue Delay (ms)\" font \"Verdana\"\nset ylabel \"Goodput (Mbps)\" font \"Verdana\"\n";
   outfile << "set xrange[] reverse\nset grid\nshow grid\n";
   outfile.close ();
@@ -61,9 +74,11 @@ void RunOneScenario (std::string scenarioName)
       std::string proQdelThr = std::string ("python src/aqm-eval-suite/utils/generate-ellipseinput.py ") + scenarioName + " " + AQM[i] + queueDisc;
       std::string proEllipse = std::string ("python src/aqm-eval-suite/utils/ellipsemaker ") + scenarioName + " " + AQM[i] + queueDisc;
       std::string plotGoodput = std::string ("python src/aqm-eval-suite/utils/goodput_process.py ") + scenarioName + " " + AQM[i] + queueDisc;
+      std::string plotDelay = std::string ("python src/aqm-eval-suite/utils/delay_process.py ") + scenarioName + " " + AQM[i] + queueDisc;
       system (proQdelThr.c_str ());
       system (proEllipse.c_str ());
       system (plotGoodput.c_str ());
+      system (plotDelay.c_str ());
       std::string graphName = std::string ("\"aqm-eval-output/") + scenarioName + std::string ("/data/") + AQM[i] + queueDisc + std::string ("-ellipse.dat\" notitle with lines");
       if (i != nAQM - 1)
         {
@@ -93,8 +108,8 @@ void RunRttFairness (std::string scenarioName)
       mkdir ((std::string ("aqm-eval-output/") + scenarioName).c_str (), 0700);
       mkdir ((std::string ("aqm-eval-output/") + scenarioName + std::string ("/data")).c_str (), 0700);
       mkdir ((std::string ("aqm-eval-output/") + scenarioName + std::string ("/graph")).c_str (), 0700);
-  }
-  std::string commandToRun = std::string ("./waf --run RttFairness");
+    }
+  std::string commandToRun = std::string ("./waf --run \"RttFairness") + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string ("\"");
   system (commandToRun.c_str ());
   for (uint32_t i = 1; i <= 15; i++)
     {
@@ -103,7 +118,8 @@ void RunRttFairness (std::string scenarioName)
       scenarioName = orig + std::string (sce);
       std::ofstream outfile;
       outfile.open ((std::string ("aqm-eval-output/") + scenarioName + std::string ("/data/plot-shell")).c_str (), std::ios::out | std::ios::trunc);
-      outfile << "set terminal png size 500, 350\n";
+      outfile << "set terminal png size 600, 350\n";
+      outfile << "set size .9, 1\n";
       outfile << "set output \"aqm-eval-output/" << scenarioName.c_str () << "/graph/qdel-goodput.png\"\n set xlabel \"Queue Delay (ms)\" font \"Verdana\"\nset ylabel \"Goodput (Mbps)\" font \"Verdana\"\n";
       outfile << "set xrange[] reverse\nset grid\nshow grid\n";
       outfile.close ();
@@ -115,10 +131,12 @@ void RunRttFairness (std::string scenarioName)
           std::string proQdelThr = std::string ("python src/aqm-eval-suite/utils/generate-ellipseinput.py ") + scenarioName + " " + AQM[i] + queueDisc;
           std::string proEllipse = std::string ("python src/aqm-eval-suite/utils/ellipsemaker ") + scenarioName + " " + AQM[i] + queueDisc;
           std::string plotGoodput = std::string ("python src/aqm-eval-suite/utils/goodput_process.py ") + scenarioName + " " + AQM[i] + queueDisc;
+          std::string plotDelay = std::string ("python src/aqm-eval-suite/utils/delay_process.py ") + scenarioName + " " + AQM[i] + queueDisc;
           std::string plotDrop = std::string ("python src/aqm-eval-suite/utils/drop_process.py ") + scenarioName + " " + AQM[i] + queueDisc;
           system (proQdelThr.c_str ());
           system (proEllipse.c_str ());
           system (plotGoodput.c_str ());
+          system (plotDelay.c_str ());
           system (plotDrop.c_str ());
           std::string graphName = std::string ("\"aqm-eval-output/") + scenarioName + std::string ("/data/") + AQM[i] + queueDisc + std::string ("-ellipse.dat\" notitle with lines");
           if (i != nAQM - 1)
@@ -164,6 +182,8 @@ int main (int argc, char *argv[])
   CommandLine cmd;
   cmd.AddValue ("number", "Scenario number from RFC", scenarioNumber);
   cmd.AddValue ("name", "Name of the scenario (eg: TCPFriendlySameInitCwnd)", scenarioName);
+  cmd.AddValue ("AggressiveTcp", "Variant of the Aggressive TCP", AggressiveTcp);
+  cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
 
   cmd.Parse (argc, argv);
 

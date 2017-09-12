@@ -59,7 +59,7 @@ LbeTransportSender::CreateScenario (std::string aqm)
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("48ms"));
   uint32_t nflow = 2;
 
-  EvaluationTopology et ("LbeTransportSender", nflow, pointToPoint, aqm, 1460);
+  EvaluationTopology et ("LbeTransportSender", nflow, pointToPoint, aqm, 698);
   ApplicationContainer ac1 = et.CreateFlow (StringValue ("1ms"),
                                             StringValue ("1ms"),
                                             StringValue ("10Mbps"),
@@ -83,10 +83,12 @@ LbeTransportSender::CreateScenario (std::string aqm)
 int
 main (int argc, char *argv[])
 {
+  std::string QueueDiscMode = "";
   CommandLine cmd;
+  cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
   cmd.Parse (argc, argv);
 
   LbeTransportSender sce;
-  sce.ConfigureQueueDisc (45, 1460, "1Mbps", "48ms");
+  sce.ConfigureQueueDisc (45, 750, "1Mbps", "48ms", QueueDiscMode);
   sce.RunSimulation (Seconds (310));
 }

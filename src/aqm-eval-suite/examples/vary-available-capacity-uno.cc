@@ -81,7 +81,7 @@ VaryingBandwidthUno::CreateScenario (std::string aqm)
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("48ms"));
   uint32_t nflow = 2;
 
-  EvaluationTopology et ("VaryingBandwidthUno", nflow, pointToPoint, aqm, 1460);
+  EvaluationTopology et ("VaryingBandwidthUno", nflow, pointToPoint, aqm, 698);
   ApplicationContainer ac1 = et.CreateFlow (StringValue ("1ms"),
                                             StringValue ("1ms"),
                                             StringValue ("500Mbps"),
@@ -111,10 +111,12 @@ VaryingBandwidthUno::CreateScenario (std::string aqm)
 int
 main (int argc, char *argv[])
 {
+  std::string QueueDiscMode = "";
   CommandLine cmd;
+  cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
   cmd.Parse (argc, argv);
 
   VaryingBandwidthUno sce;
-  sce.ConfigureQueueDisc (500, 1460, "100Mbps", "48ms");
+  sce.ConfigureQueueDisc (500, 750, "100Mbps", "48ms", QueueDiscMode);
   sce.RunSimulation (Seconds (310));
 }
