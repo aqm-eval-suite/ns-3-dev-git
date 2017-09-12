@@ -74,8 +74,9 @@ public:
    * \param pktsize Packet size
    * \param linkbw Bottleneck link bandwidth
    * \param linkdel Bottleneck link delay
+   * \param mode Mode of operation for QueueDisc
    */
-  virtual void ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string linkbw, std::string linkdel);
+  virtual void ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string linkbw, std::string linkdel, std::string mode);
 
 protected:
   /**
