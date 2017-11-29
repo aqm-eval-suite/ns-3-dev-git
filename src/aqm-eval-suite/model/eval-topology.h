@@ -73,7 +73,8 @@ public:
                       uint32_t numFlows,
                       PointToPointHelper p2pHelper,
                       std::string queueDisc,
-                      uint32_t pktSize = 512);
+                      uint32_t pktSize = 512,
+                      bool isBql = false);
 
   /**
    * \brief Destructor

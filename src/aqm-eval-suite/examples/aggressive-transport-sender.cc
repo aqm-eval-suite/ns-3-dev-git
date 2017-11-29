@@ -41,7 +41,7 @@ public:
   ~AggressiveTransportSender ();
 
 protected:
-  virtual EvaluationTopology CreateScenario (std::string aqm);
+  virtual EvaluationTopology CreateScenario (std::string aqm, bool isBql);
 };
 std::string AggressiveTcpVariant = "ns3::TcpBic";
 
@@ -54,14 +54,14 @@ AggressiveTransportSender::~AggressiveTransportSender ()
 }
 
 EvaluationTopology
-AggressiveTransportSender::CreateScenario (std::string aqm)
+AggressiveTransportSender::CreateScenario (std::string aqm, bool isBql)
 {
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute  ("DataRate", StringValue ("1Mbps"));
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("48ms"));
   uint32_t nflow = 1;
 
-  EvaluationTopology et ("AggressiveTransportSender", nflow, pointToPoint, aqm, 698);
+  EvaluationTopology et ("AggressiveTransportSender", nflow, pointToPoint, aqm, 698, isBql);
   ApplicationContainer ac = et.CreateFlow (StringValue ("1ms"),
                                            StringValue ("1ms"),
                                            StringValue ("10Mbps"),
@@ -78,9 +78,11 @@ main (int argc, char *argv[])
 {
   std::string QueueDiscMode = "";
   std::string TcpVariant = "";
+  std::string isBql = "";
   CommandLine cmd;
   cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
   cmd.AddValue ("TcpVariant", "Aggressive TCP variant", TcpVariant);
+  cmd.AddValue ("isBql", "Enables/Disables Byte Queue Limits", isBql);
   cmd.Parse (argc, argv);
   if ((TcpVariant == "ns3::TcpYeah") || (TcpVariant == "ns3::TcpBic") || (TcpVariant == "ns3::TcpHighSpeed") || (TcpVariant == "ns3::TcpIllinois") || (TcpVariant == "ns3::TcpScalable") || (TcpVariant == "ns3::TcpHtcp"))
     {
@@ -88,5 +90,5 @@ main (int argc, char *argv[])
     }
   AggressiveTransportSender sce;
   sce.ConfigureQueueDisc (45, 750, "1Mbps", "48ms", QueueDiscMode);
-  sce.RunSimulation (Seconds (310));
+  sce.RunSimulation (Seconds (310), isBql == "true");
 }

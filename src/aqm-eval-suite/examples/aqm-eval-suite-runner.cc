@@ -25,6 +25,7 @@
 #include <map>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 #include "ns3/core-module.h"
 #include <sys/stat.h>
 
@@ -43,6 +44,13 @@ std::string queueDisc = "QueueDisc";
 uint32_t nAQM = 7;
 std::string AggressiveTcp = "";
 std::string QueueDiscMode = "QUEUE_DISC_MODE_PACKETS";
+std::string isBql = "false"; 
+
+void RemoveAqm (std::string aqm)
+{
+  AQM.erase (std::remove (AQM.begin (), AQM.end (), aqm), AQM.end ());
+  nAQM--;	
+}
 
 void RunOneScenario (std::string scenarioName)
 {
@@ -52,11 +60,11 @@ void RunOneScenario (std::string scenarioName)
   std::string commandToRun;
   if (AggressiveTcp != "" && scenarioName == "AggressiveTransportSender")
     {
-      commandToRun = std::string ("./waf --run \"") + scenarioName + std::string (" --TcpVariant=ns3::") + AggressiveTcp + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string ("\"");
+      commandToRun = std::string ("./waf --run \"") + scenarioName + std::string (" --TcpVariant=ns3::") + AggressiveTcp + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string (" --isBql=") + isBql + std::string ("\"");
     }
   else
     {
-      commandToRun = std::string ("./waf --run \"") + scenarioName + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string ("\"");
+      commandToRun = std::string ("./waf --run \"") + scenarioName + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string (" --isBql=") + isBql + std::string ("\"");
     }
   system (commandToRun.c_str ());
   std::ofstream outfile;
@@ -72,7 +80,7 @@ void RunOneScenario (std::string scenarioName)
   for (uint32_t i = 0; i < nAQM; i++)
     {
       std::string proQdelThr = std::string ("python src/aqm-eval-suite/utils/generate-ellipseinput.py ") + scenarioName + " " + AQM[i] + queueDisc;
-      std::string proEllipse = std::string ("python src/aqm-eval-suite/utils/ellipsemaker ") + scenarioName + " " + AQM[i] + queueDisc;
+      std::string proEllipse = std::string ("python src/aqm-eval-suite/utils/ellipsemaker ") + scenarioName + " " + AQM[i] + queueDisc + " " + std::to_string (i + 1);
       std::string plotGoodput = std::string ("python src/aqm-eval-suite/utils/goodput_process.py ") + scenarioName + " " + AQM[i] + queueDisc;
       std::string plotDelay = std::string ("python src/aqm-eval-suite/utils/delay_process.py ") + scenarioName + " " + AQM[i] + queueDisc;
       system (proQdelThr.c_str ());
@@ -109,7 +117,7 @@ void RunRttFairness (std::string scenarioName)
       mkdir ((std::string ("aqm-eval-output/") + scenarioName + std::string ("/data")).c_str (), 0700);
       mkdir ((std::string ("aqm-eval-output/") + scenarioName + std::string ("/graph")).c_str (), 0700);
     }
-  std::string commandToRun = std::string ("./waf --run \"RttFairness") + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string ("\"");
+  std::string commandToRun = std::string ("./waf --run \"RttFairness") + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string (" --isBql=") + isBql + std::string ("\"");
   system (commandToRun.c_str ());
   for (uint32_t i = 1; i <= 15; i++)
     {
@@ -129,7 +137,7 @@ void RunRttFairness (std::string scenarioName)
       for (uint32_t i = 0; i < nAQM; i++)
         {
           std::string proQdelThr = std::string ("python src/aqm-eval-suite/utils/generate-ellipseinput.py ") + scenarioName + " " + AQM[i] + queueDisc;
-          std::string proEllipse = std::string ("python src/aqm-eval-suite/utils/ellipsemaker ") + scenarioName + " " + AQM[i] + queueDisc;
+          std::string proEllipse = std::string ("python src/aqm-eval-suite/utils/ellipsemaker ") + scenarioName + " " + AQM[i] + queueDisc + " " + std::to_string (i + 1);
           std::string plotGoodput = std::string ("python src/aqm-eval-suite/utils/goodput_process.py ") + scenarioName + " " + AQM[i] + queueDisc;
           std::string plotDelay = std::string ("python src/aqm-eval-suite/utils/delay_process.py ") + scenarioName + " " + AQM[i] + queueDisc;
           std::string plotDrop = std::string ("python src/aqm-eval-suite/utils/drop_process.py ") + scenarioName + " " + AQM[i] + queueDisc;
@@ -184,6 +192,7 @@ int main (int argc, char *argv[])
   cmd.AddValue ("name", "Name of the scenario (eg: TCPFriendlySameInitCwnd)", scenarioName);
   cmd.AddValue ("AggressiveTcp", "Variant of the Aggressive TCP", AggressiveTcp);
   cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
+  cmd.AddValue ("isBql", "Enables/Disables Byte Queue Limits", isBql);
 
   cmd.Parse (argc, argv);
 

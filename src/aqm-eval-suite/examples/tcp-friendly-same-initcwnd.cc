@@ -40,7 +40,7 @@ public:
   ~TCPFriendlySameInitCwnd ();
 
 protected:
-  virtual EvaluationTopology CreateScenario (std::string aqm);
+  virtual EvaluationTopology CreateScenario (std::string aqm, bool isBql);
 };
 
 TCPFriendlySameInitCwnd::TCPFriendlySameInitCwnd ()
@@ -52,13 +52,13 @@ TCPFriendlySameInitCwnd::~TCPFriendlySameInitCwnd ()
 }
 
 EvaluationTopology
-TCPFriendlySameInitCwnd::CreateScenario (std::string aqm)
+TCPFriendlySameInitCwnd::CreateScenario (std::string aqm, bool isBql)
 {
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute  ("DataRate", StringValue ("1Mbps"));
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("48ms"));
   uint32_t nflow = 1;
-  EvaluationTopology et ("TCPFriendlySameInitCwnd", nflow, pointToPoint, aqm, 698);
+  EvaluationTopology et ("TCPFriendlySameInitCwnd", nflow, pointToPoint, aqm, 698, isBql);
   ApplicationContainer ac = et.CreateFlow (StringValue ("1ms"),
                                            StringValue ("1ms"),
                                            StringValue ("10Mbps"),
@@ -74,11 +74,13 @@ int
 main (int argc, char *argv[])
 {
   std::string QueueDiscMode = "";
+  std::string isBql = "";
   CommandLine cmd;
   cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
+  cmd.AddValue ("isBql", "Enables/Disables Byte Queue Limits", isBql);
   cmd.Parse (argc, argv);
 
   TCPFriendlySameInitCwnd sce;
   sce.ConfigureQueueDisc (45, 750, "1Mbps", "48ms", QueueDiscMode);
-  sce.RunSimulation (Seconds (310));
+  sce.RunSimulation (Seconds (310), isBql == "true");
 }

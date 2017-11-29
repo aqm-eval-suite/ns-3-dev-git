@@ -41,7 +41,7 @@ public:
   ~RttFairness ();
 
 protected:
-  virtual EvaluationTopology CreateScenario (std::string aqm);
+  virtual EvaluationTopology CreateScenario (std::string aqm, bool isBql);
 
 private:
   uint32_t m_run;
@@ -59,7 +59,7 @@ RttFairness::~RttFairness ()
 }
 
 EvaluationTopology
-RttFairness::CreateScenario (std::string aqm)
+RttFairness::CreateScenario (std::string aqm, bool isBql)
 {
   uint32_t reqDelay = (delay[m_run] - 4) / 4;
   char OWD[20];
@@ -72,7 +72,7 @@ RttFairness::CreateScenario (std::string aqm)
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("2ms"));
   uint32_t nflow = 2;
 
-  EvaluationTopology et (scenarioName, nflow, pointToPoint, aqm, 698);
+  EvaluationTopology et (scenarioName, nflow, pointToPoint, aqm, 698, isBql);
   ApplicationContainer ac1 = et.CreateFlow (StringValue ("24ms"),
                                             StringValue ("24ms"),
                                             StringValue ("10Mbps"),
@@ -97,14 +97,16 @@ int
 main (int argc, char *argv[])
 {
   std::string QueueDiscMode = "";
+  std::string isBql = "";
   CommandLine cmd;
   cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
+  cmd.AddValue ("isBql", "Enables/Disables Byte Queue Limits", isBql);
   cmd.Parse (argc, argv);
 
   for (uint32_t i = 0; i < 15; i++)
     {
       RttFairness rf (i);
       rf.ConfigureQueueDisc (45, 750, "1Mbps", "2ms", QueueDiscMode);
-      rf.RunSimulation (Seconds (610));
+      rf.RunSimulation (Seconds (610), isBql == "true");
     }
 }

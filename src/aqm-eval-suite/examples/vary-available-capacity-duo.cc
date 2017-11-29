@@ -40,7 +40,7 @@ public:
   ~VaryingBandwidthDuo ();
 
 protected:
-  virtual EvaluationTopology CreateScenario (std::string aqm);
+  virtual EvaluationTopology CreateScenario (std::string aqm, bool isBql);
 
 private:
   void ChangeDataRate ();
@@ -74,14 +74,14 @@ VaryingBandwidthDuo::ChangeDataRate ()
 }
 
 EvaluationTopology
-VaryingBandwidthDuo::CreateScenario (std::string aqm)
+VaryingBandwidthDuo::CreateScenario (std::string aqm, bool isBql)
 {
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute  ("DataRate", StringValue ("100Mbps"));
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("48ms"));
   uint32_t nflow = 2;
 
-  EvaluationTopology et ("VaryingBandwidthDuo", nflow, pointToPoint, aqm, 698);
+  EvaluationTopology et ("VaryingBandwidthDuo", nflow, pointToPoint, aqm, 698, isBql);
   ApplicationContainer ac1 = et.CreateFlow (StringValue ("1ms"),
                                             StringValue ("1ms"),
                                             StringValue ("500Mbps"),
@@ -113,11 +113,13 @@ int
 main (int argc, char *argv[])
 {
   std::string QueueDiscMode = "";
+  std::string isBql = "";
   CommandLine cmd;
   cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
+  cmd.AddValue ("isBql", "Enables/Disables Byte Queue Limits", isBql);
   cmd.Parse (argc, argv);
 
   VaryingBandwidthDuo sce;
   sce.ConfigureQueueDisc (500, 750, "100Mbps", "48ms", QueueDiscMode);
-  sce.RunSimulation (Seconds (310));
+  sce.RunSimulation (Seconds (310), isBql == "true");
 }

@@ -40,7 +40,7 @@ public:
   ~LbeTransportSender ();
 
 protected:
-  virtual EvaluationTopology CreateScenario (std::string aqm);
+  virtual EvaluationTopology CreateScenario (std::string aqm, bool isBql);
 };
 
 LbeTransportSender::LbeTransportSender ()
@@ -52,14 +52,14 @@ LbeTransportSender::~LbeTransportSender ()
 }
 
 EvaluationTopology
-LbeTransportSender::CreateScenario (std::string aqm)
+LbeTransportSender::CreateScenario (std::string aqm, bool isBql)
 {
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute  ("DataRate", StringValue ("1Mbps"));
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("48ms"));
   uint32_t nflow = 2;
 
-  EvaluationTopology et ("LbeTransportSender", nflow, pointToPoint, aqm, 698);
+  EvaluationTopology et ("LbeTransportSender", nflow, pointToPoint, aqm, 698, isBql);
   ApplicationContainer ac1 = et.CreateFlow (StringValue ("1ms"),
                                             StringValue ("1ms"),
                                             StringValue ("10Mbps"),
@@ -84,11 +84,13 @@ int
 main (int argc, char *argv[])
 {
   std::string QueueDiscMode = "";
+  std::string isBql = "";
   CommandLine cmd;
   cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
+  cmd.AddValue ("isBql", "Enables/Disables Byte Queue Limits", isBql);
   cmd.Parse (argc, argv);
 
   LbeTransportSender sce;
   sce.ConfigureQueueDisc (45, 750, "1Mbps", "48ms", QueueDiscMode);
-  sce.RunSimulation (Seconds (310));
+  sce.RunSimulation (Seconds (310), isBql == "true");
 }

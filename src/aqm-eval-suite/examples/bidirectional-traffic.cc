@@ -37,7 +37,7 @@ public:
   ~BiDirectional ();
 
 protected:
-  virtual EvaluationTopology CreateScenario (std::string aqm);
+  virtual EvaluationTopology CreateScenario (std::string aqm, bool isBql);
 };
 
 BiDirectional::BiDirectional ()
@@ -49,14 +49,14 @@ BiDirectional::~BiDirectional ()
 }
 
 EvaluationTopology
-BiDirectional::CreateScenario (std::string aqm)
+BiDirectional::CreateScenario (std::string aqm, bool isBql)
 {
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute  ("DataRate", StringValue ("1Mbps"));
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("45ms"));
   uint32_t nflow = 0.036 * 90;
 
-  EvaluationTopology et ("BiDirectional", nflow, pointToPoint, aqm, 698);
+  EvaluationTopology et ("BiDirectional", nflow, pointToPoint, aqm, 698, isBql);
   for (uint32_t i = 0; i < nflow; i++)
     {
       if ( i >= (nflow / 2))
@@ -88,11 +88,13 @@ int
 main (int argc, char *argv[])
 {
   std::string QueueDiscMode = "";
+  std::string isBql = "";
   CommandLine cmd;
   cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
+  cmd.AddValue ("isBql", "Enables/Disables Byte Queue Limits", isBql);
   cmd.Parse (argc, argv);
 
   BiDirectional sce;
   sce.ConfigureQueueDisc (45, 750, "1Mbps", "48ms", QueueDiscMode);
-  sce.RunSimulation (Seconds (310));
+  sce.RunSimulation (Seconds (310), isBql == "true");
 }

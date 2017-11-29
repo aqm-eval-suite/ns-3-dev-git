@@ -7,6 +7,7 @@ samples = []
 
 scenario_name = sys.argv[1]
 queuedisc_name = sys.argv[2]
+queuedisc_index = sys.argv[3]
 
 input_file = open("aqm-eval-output/"+scenario_name+"/data/"+queuedisc_name+"-result.dat", "r") 
 lines = input_file.readlines()
@@ -15,7 +16,6 @@ output_file_name = "aqm-eval-output/"+scenario_name+"/data/"+queuedisc_name+"-el
 output_file = open(output_file_name, "w") 
 
 qdisc_label = {'PfifoFast': 'DropTail', 'CoDel': 'CoDel', 'Pie': 'PIE', 'Red': 'RED',  'AdaptiveRed': 'ARED', 'FengAdaptiveRed': 'FRED', 'NonLinearRed':'NLRED'}
-qdisc_index = {'PfifoFast': '1', 'CoDel': '2', 'Pie': '3', 'Red': '4',  'AdaptiveRed': '5',  'FengAdaptiveRed': '6',  'NonLinearRed': '7'}
 
 for line in lines:
     fields = line.split( ' ' )
@@ -81,6 +81,6 @@ output_file.close()
 input_file.close()
 
 gnu_file = open("aqm-eval-output/"+scenario_name+"/data/plot-shell", "a") 
-gnu_file.write ("set label \"\" at "+str(center_x*1000.0)+","+str(center_y)+" point lt "+qdisc_index[queuedisc_name[:-9]]+" pt "+qdisc_index[queuedisc_name[:-9]]+" center font \"Verdana\"  tc lt "+qdisc_index[queuedisc_name[:-9]]+" offset 1.5,0.4\n")
-gnu_file.write ("set label \""+qdisc_label[queuedisc_name[:-9]]+"\" at graph "+str(1.03)+","+str(0.96 - (0.06 * (float(qdisc_index[queuedisc_name[:-9]]) - 1)))+" point lt "+qdisc_index[queuedisc_name[:-9]]+" pt "+qdisc_index[queuedisc_name[:-9]]+" font \"Verdana,12\"  tc lt "+qdisc_index[queuedisc_name[:-9]]+" offset 0.7, -0.2\n")
+gnu_file.write ("set label \"\" at "+str(center_x*1000.0)+","+str(center_y)+" point lt "+queuedisc_index+" pt "+queuedisc_index+" center font \"Verdana\"  tc lt "+queuedisc_index+" offset 1.5,0.4\n")
+gnu_file.write ("set label \""+qdisc_label[queuedisc_name[:-9]]+"\" at graph "+str(1.03)+","+str(0.96 - (0.06 * (float(queuedisc_index) - 1)))+" point lt "+queuedisc_index+" pt "+queuedisc_index+" font \"Verdana,12\"  tc lt "+queuedisc_index+" offset 0.7, -0.2\n")
 gnu_file.close()

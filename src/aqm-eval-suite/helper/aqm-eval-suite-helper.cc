@@ -92,11 +92,11 @@ ScenarioImpl::ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string 
 }
 
 void
-ScenarioImpl::RunSimulation (Time simtime)
+ScenarioImpl::RunSimulation (Time simtime, bool isBql)
 {
   for (uint32_t i = 0; i < m_nAQM; i++)
     {
-      EvaluationTopology et = CreateScenario (m_AQM[i]);
+      EvaluationTopology et = CreateScenario (m_AQM[i], isBql);
       Simulator::Schedule (simtime, &ScenarioImpl::DestroyTrace, this, et);
       Simulator::Stop (simtime);
       Simulator::Run ();

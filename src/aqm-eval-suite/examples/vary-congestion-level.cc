@@ -40,7 +40,7 @@ public:
   ~VaryingCongestion ();
 
 protected:
-  virtual EvaluationTopology CreateScenario (std::string aqm);
+  virtual EvaluationTopology CreateScenario (std::string aqm, bool isBql);
 
 private:
   void PauseApp (EvaluationTopology et, uint32_t flow)
@@ -63,14 +63,14 @@ VaryingCongestion::~VaryingCongestion ()
 }
 
 EvaluationTopology
-VaryingCongestion::CreateScenario (std::string aqm)
+VaryingCongestion::CreateScenario (std::string aqm, bool isBql)
 {
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute  ("DataRate", StringValue ("1Mbps"));
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("48ms"));
   uint32_t nflow = 0.114 * 90;
 
-  EvaluationTopology et ("VaryingCongestion", nflow, pointToPoint, aqm, 698);
+  EvaluationTopology et ("VaryingCongestion", nflow, pointToPoint, aqm, 698, isBql);
   for (uint32_t i = 0; i < nflow; i++)
     {
       ApplicationContainer ac = et.CreateFlow (StringValue ("1ms"),
@@ -113,11 +113,13 @@ int
 main (int argc, char *argv[])
 {
   std::string QueueDiscMode = "";
+  std::string isBql = "";
   CommandLine cmd;
   cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
+  cmd.AddValue ("isBql", "Enables/Disables Byte Queue Limits", isBql);
   cmd.Parse (argc, argv);
 
   VaryingCongestion sce;
   sce.ConfigureQueueDisc (45, 750, "1Mbps", "48ms", QueueDiscMode);
-  sce.RunSimulation (Seconds (310));
+  sce.RunSimulation (Seconds (310), isBql == "true");
 }

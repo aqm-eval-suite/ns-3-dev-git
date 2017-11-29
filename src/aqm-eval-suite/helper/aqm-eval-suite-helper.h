@@ -50,8 +50,9 @@ public:
    * \brief Run simulation for the specified duration
    *
    * \param simtime The simulation time
+   * \param isBql Enable/Disable Byte Queue Limits
    */
-  void RunSimulation (Time simtime);
+  void RunSimulation (Time simtime, bool isBql);
 
   /**
    * \brief Adds the AQM to m_AQM list
@@ -84,7 +85,7 @@ protected:
    *
    * \param aqm TypeID of the AQM algorithm
    */
-  virtual EvaluationTopology CreateScenario (std::string aqm) = 0;
+  virtual EvaluationTopology CreateScenario (std::string aqm, bool isBql) = 0;
 
 private:
   std::vector<std::string> m_AQM;               //!< List of AQM algorithms

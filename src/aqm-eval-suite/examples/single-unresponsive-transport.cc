@@ -40,7 +40,7 @@ public:
   ~UnresponsiveTransport ();
 
 protected:
-  virtual EvaluationTopology CreateScenario (std::string aqm);
+  virtual EvaluationTopology CreateScenario (std::string aqm, bool isBql);
 };
 
 UnresponsiveTransport::UnresponsiveTransport ()
@@ -52,14 +52,14 @@ UnresponsiveTransport::~UnresponsiveTransport ()
 }
 
 EvaluationTopology
-UnresponsiveTransport::CreateScenario (std::string aqm)
+UnresponsiveTransport::CreateScenario (std::string aqm, bool isBql)
 {
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute  ("DataRate", StringValue ("1Mbps"));
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("48ms"));
   uint32_t nflow = 1;
 
-  EvaluationTopology et ("UnresponsiveTransport", nflow, pointToPoint, aqm, 698);
+  EvaluationTopology et ("UnresponsiveTransport", nflow, pointToPoint, aqm, 698, isBql);
   ApplicationContainer ac = et.CreateFlow (StringValue ("1ms"),
                                            StringValue ("1ms"),
                                            StringValue ("10Mbps"),
@@ -75,11 +75,13 @@ int
 main (int argc, char *argv[])
 {
   std::string QueueDiscMode = "";
+  std::string isBql = "";
   CommandLine cmd;
   cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
+  cmd.AddValue ("isBql", "Enables/Disables Byte Queue Limits", isBql);
   cmd.Parse (argc, argv);
 
   UnresponsiveTransport sce;
   sce.ConfigureQueueDisc (45, 750, "1Mbps", "48ms", QueueDiscMode);
-  sce.RunSimulation (Seconds (310));
+  sce.RunSimulation (Seconds (310), isBql == "true");
 }
