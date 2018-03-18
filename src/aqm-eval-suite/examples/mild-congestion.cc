@@ -57,7 +57,7 @@ MildCongestion::CreateScenario (std::string aqm, bool isBql)
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute  ("DataRate", StringValue ("1Mbps"));
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("45ms"));
-  uint32_t nflow = 0.036 * 90;
+  uint32_t nflow = 0.036 * 62;
 
   EvaluationTopology et ("MildCongestion", nflow, pointToPoint, aqm, 698, isBql);
   for (uint32_t i = 0; i < nflow; i++)

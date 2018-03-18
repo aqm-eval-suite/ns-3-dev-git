@@ -68,7 +68,7 @@ VaryingCongestion::CreateScenario (std::string aqm, bool isBql)
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute  ("DataRate", StringValue ("1Mbps"));
   pointToPoint.SetChannelAttribute ("Delay", StringValue ("48ms"));
-  uint32_t nflow = 0.114 * 90;
+  uint32_t nflow = 0.114 * 62;
 
   EvaluationTopology et ("VaryingCongestion", nflow, pointToPoint, aqm, 698, isBql);
   for (uint32_t i = 0; i < nflow; i++)
@@ -81,7 +81,7 @@ VaryingCongestion::CreateScenario (std::string aqm, bool isBql)
 
       ac.Start (Seconds (0));
       ac.Stop (Seconds (300));
-      if (i > 0.036 * 90 && i < 0.081 * 90)
+      if (i > 0.036 * 62 && i < 0.081 * 62)
         {
           Simulator::Schedule (Seconds (40), &VaryingCongestion::PauseApp, this, et, i);
           Simulator::Schedule (Seconds (60), &VaryingCongestion::restartApp, this, et, i);
@@ -93,7 +93,7 @@ VaryingCongestion::CreateScenario (std::string aqm, bool isBql)
           Simulator::Schedule (Seconds (240), &VaryingCongestion::restartApp, this, et, i);
           Simulator::Schedule (Seconds (280), &VaryingCongestion::PauseApp, this, et, i);
         }
-      else if (i > 0.036 * 90 && i < 0.114 * 90)
+      else if (i > 0.036 * 62 && i < 0.114 * 62)
         {
           Simulator::Schedule (Seconds (20), &VaryingCongestion::PauseApp, this, et, i);
           Simulator::Schedule (Seconds (60), &VaryingCongestion::restartApp, this, et, i);
