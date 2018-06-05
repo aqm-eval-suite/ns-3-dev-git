@@ -58,36 +58,32 @@ ScenarioImpl::DestroyTrace (EvaluationTopology et)
 void
 ScenarioImpl::ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string linkbw, std::string linkdel, std::string mode)
 {
-  Config::SetDefault ("ns3::PfifoFastQueueDisc::Limit", UintegerValue (limit));
+  Config::SetDefault ("ns3::PfifoFastQueueDisc::MaxSize", StringValue (std::to_string (limit) + "p"));
 
-  Config::SetDefault ("ns3::RedQueueDisc::Mode", StringValue (mode));
   Config::SetDefault ("ns3::RedQueueDisc::MeanPktSize", UintegerValue (pktsize));
   Config::SetDefault ("ns3::RedQueueDisc::LinkBandwidth", StringValue (linkbw));
   Config::SetDefault ("ns3::RedQueueDisc::LinkDelay", StringValue (linkdel));
 
-  Config::SetDefault ("ns3::CoDelQueueDisc::Mode", StringValue (mode));
-  Config::SetDefault ("ns3::CoDelQueueDisc::MaxPackets", UintegerValue (limit));
-  Config::SetDefault ("ns3::CoDelQueueDisc::MaxBytes", UintegerValue (limit * pktsize));
+  Config::SetDefault ("ns3::CoDelQueueDisc::MaxSize", StringValue (std::to_string (limit) + "p"));
   Config::SetDefault ("ns3::CoDelQueueDisc::MinBytes", UintegerValue (pktsize));
 
-  Config::SetDefault ("ns3::PieQueueDisc::Mode", StringValue (mode));
   Config::SetDefault ("ns3::PieQueueDisc::MeanPktSize", UintegerValue (pktsize));
 
   if (mode == "QUEUE_DISC_MODE_PACKETS")
     {
-      Config::SetDefault ("ns3::RedQueueDisc::QueueLimit", UintegerValue (limit));
+      Config::SetDefault ("ns3::RedQueueDisc::MaxSize", StringValue (std::to_string (limit) + "p"));
       Config::SetDefault ("ns3::RedQueueDisc::MinTh", DoubleValue (5));
       Config::SetDefault ("ns3::RedQueueDisc::MaxTh", DoubleValue (15));
 
-      Config::SetDefault ("ns3::PieQueueDisc::QueueLimit", UintegerValue (limit));
+      Config::SetDefault ("ns3::PieQueueDisc::MaxSize", StringValue (std::to_string (limit) + "p"));
     }
   else
     {
-      Config::SetDefault ("ns3::RedQueueDisc::QueueLimit", UintegerValue (limit * pktsize));
+      Config::SetDefault ("ns3::RedQueueDisc::MaxSize",StringValue (std::to_string (limit * pktsize) + "B"));
       Config::SetDefault ("ns3::RedQueueDisc::MinTh", DoubleValue (5 * pktsize));
       Config::SetDefault ("ns3::RedQueueDisc::MaxTh", DoubleValue (15 * pktsize));
 
-      Config::SetDefault ("ns3::PieQueueDisc::QueueLimit", UintegerValue (limit * pktsize));
+      Config::SetDefault ("ns3::PieQueueDisc::MaxSize", StringValue (std::to_string (limit * pktsize) + "B"));
     }
 }
 
