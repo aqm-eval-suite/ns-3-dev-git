@@ -61,20 +61,39 @@ RttFairness::~RttFairness ()
 EvaluationTopology
 RttFairness::CreateScenario (std::string aqm, bool isBql)
 {
-  uint32_t reqDelay = (delay[m_run] - 4) / 4;
+  double bottleneck;
+  double reqDelayConstRtt;
+  double reqDelay;
   char OWD[20];
   char scenario[20];
-  sprintf (OWD, "%dms", reqDelay);
+  char OWDConst[20];
+  char bottleneckStr[20];
+  if (delay[m_run] < 100)
+    {
+      bottleneck = delay[m_run] * 0.8 / 2;
+      reqDelay = delay[m_run] * 0.2 / 4;
+      reqDelayConstRtt = (50 - bottleneck) / 2;
+    }
+  else
+    {
+      bottleneck = 40;
+      reqDelay = (delay[m_run] - 80) / 4;
+      reqDelayConstRtt = 5;
+    }
+
+  sprintf (OWD, "%fms", reqDelay);
+  sprintf (OWDConst, "%fms", reqDelayConstRtt);
   sprintf (scenario, "%d", m_run + 1);
+  sprintf (bottleneckStr, "%fms", bottleneck);
   std::string scenarioName = std::string ("RttFairness") + std::string (scenario);
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute  ("DataRate", StringValue ("1Mbps"));
-  pointToPoint.SetChannelAttribute ("Delay", StringValue ("2ms"));
+  pointToPoint.SetChannelAttribute ("Delay", StringValue (bottleneckStr));
   uint32_t nflow = 2;
 
   EvaluationTopology et (scenarioName, nflow, pointToPoint, aqm, 698, isBql);
-  ApplicationContainer ac1 = et.CreateFlow (StringValue ("24ms"),
-                                            StringValue ("24ms"),
+  ApplicationContainer ac1 = et.CreateFlow (StringValue (OWDConst),
+                                            StringValue (OWDConst),
                                             StringValue ("10Mbps"),
                                             StringValue ("10Mbps"),
                                             "ns3::TcpNewReno", 0, DataRate ("10Mb/s"), 3);
