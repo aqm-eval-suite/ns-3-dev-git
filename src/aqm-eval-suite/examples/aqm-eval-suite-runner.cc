@@ -183,6 +183,7 @@ int main (int argc, char *argv[])
   ScenarioNumberMapping["8.2.6.1"] = "VaryingBandwidthUno";
   ScenarioNumberMapping["8.2.6.2"] = "VaryingBandwidthDuo";
   ScenarioNumberMapping["6"] = "RttFairness";
+  ScenarioNumberMapping["4.5"] = "interaction-with-ECN";
 
   std::string scenarioName = "";
   std::string scenarioNumber = "";
