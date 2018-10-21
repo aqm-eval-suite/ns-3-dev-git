@@ -32,16 +32,16 @@
 using namespace ns3;
 
 std::vector<std::string> AQM = {
+"Red",
 "PfifoFast",
 "CoDel",
 "Pie",
-"Red",
 "AdaptiveRed",
 "FengAdaptiveRed",
 "NonLinearRed"
 };
 std::string queueDisc = "QueueDisc";
-uint32_t nAQM = 7;
+uint32_t nAQM = 1;
 std::string AggressiveTcp = "";
 std::string QueueDiscMode = "QUEUE_DISC_MODE_PACKETS";
 std::string isBql = "false"; 
@@ -107,8 +107,13 @@ void RunOneScenario (std::string scenarioName)
 
 void RunRttFairness (std::string scenarioName)
 {
-  std::string orig = "RttFairness";
-  for (uint32_t i = 1; i <= 15; i++)
+  std::string orig;
+  if(scenarioName == "RttFairness")
+    orig = "RttFairness";
+  if(scenarioName == "interaction-with-ECN")
+    orig = "interaction-with-ECN";
+     
+  for (uint32_t i = 1; i <= 1; i++)
     {
       char sce[20];
       sprintf (sce, "%d", i);
@@ -117,9 +122,9 @@ void RunRttFairness (std::string scenarioName)
       mkdir ((std::string ("aqm-eval-output/") + scenarioName + std::string ("/data")).c_str (), 0700);
       mkdir ((std::string ("aqm-eval-output/") + scenarioName + std::string ("/graph")).c_str (), 0700);
     }
-  std::string commandToRun = std::string ("./waf --run \"RttFairness") + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string (" --isBql=") + isBql + std::string ("\"");
+  std::string commandToRun = std::string ("./waf --run \"")+ orig + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string (" --isBql=") + isBql + std::string ("\"");
   system (commandToRun.c_str ());
-  for (uint32_t i = 1; i <= 15; i++)
+  for (uint32_t i = 1; i <=1; i++)
     {
       char sce[20];
       sprintf (sce, "%d", i);
@@ -208,11 +213,11 @@ int main (int argc, char *argv[])
       scenarioName = ScenarioNumberMapping[scenarioNumber];
     }
 
-  if (scenarioName != "All" && scenarioName != "RttFairness")
+  if (scenarioName != "All" && scenarioName != "RttFairness" && scenarioName != "interaction-with-ECN")
     {
       RunOneScenario (scenarioName);
     }
-  else if (scenarioName != "All" && scenarioName == "RttFairness")
+  else if (scenarioName != "All" && (scenarioName == "RttFairness" || scenarioName == "interaction-with-ECN"))
     {
       RunRttFairness (scenarioName);
     }

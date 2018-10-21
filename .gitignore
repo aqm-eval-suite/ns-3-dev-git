@@ -35,5 +35,6 @@ TAGS
 
 build-dir/
 build/
+aqm-eval-output/
 /.cproject
 /.project

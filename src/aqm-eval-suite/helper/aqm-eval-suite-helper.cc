@@ -27,15 +27,15 @@ namespace ns3 {
 ScenarioImpl::ScenarioImpl ()
 {
   m_AQM = {
-    "ns3::PfifoFastQueueDisc",
     "ns3::RedQueueDisc",
+    "ns3::PfifoFastQueueDisc",
     "ns3::AdaptiveRedQueueDisc",
     "ns3::FengAdaptiveRedQueueDisc",
     "ns3::NonLinearRedQueueDisc",
     "ns3::CoDelQueueDisc",
     "ns3::PieQueueDisc"
   };
-  m_nAQM = 7;
+  m_nAQM = 1;
 }
 
 ScenarioImpl::~ScenarioImpl ()
@@ -56,7 +56,7 @@ ScenarioImpl::DestroyTrace (EvaluationTopology et)
 }
 
 void
-ScenarioImpl::ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string linkbw, std::string linkdel, std::string mode, bool ecn=false)
+ScenarioImpl::ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string linkbw, std::string linkdel, std::string mode, bool ecn)
 {
   Config::SetDefault ("ns3::PfifoFastQueueDisc::MaxSize", StringValue (std::to_string (limit) + "p"));
 
