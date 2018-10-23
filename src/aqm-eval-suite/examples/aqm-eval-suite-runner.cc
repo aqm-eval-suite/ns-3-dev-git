@@ -113,7 +113,7 @@ void RunRttFairness (std::string scenarioName)
   if(scenarioName == "InteractionWithECN")
     orig = "InteractionWithECN";
      
-  for (uint32_t i = 1; i <= 1; i++)
+  for (uint32_t i = 1; i <= 15; i++)
     {
       char sce[20];
       sprintf (sce, "%d", i);
@@ -124,7 +124,7 @@ void RunRttFairness (std::string scenarioName)
     }
   std::string commandToRun = std::string ("./waf --run \"")+ orig + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string (" --isBql=") + isBql + std::string ("\"");
   system (commandToRun.c_str ());
-  for (uint32_t i = 1; i <=1; i++)
+  for (uint32_t i = 1; i <=15; i++)
     {
       char sce[20];
       sprintf (sce, "%d", i);
@@ -223,7 +223,8 @@ int main (int argc, char *argv[])
     }
   else
     {
-      RunRttFairness (scenarioName);
+      RunRttFairness ("RttFairness");
+      RunRttFairness ("InteractionWithECN");
       for (std::map<std::string, std::string>::iterator it = ScenarioNumberMapping.begin (); it != ScenarioNumberMapping.end (); ++it)
         {
           if (it->second != "RttFairness")
