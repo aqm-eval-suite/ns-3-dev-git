@@ -6,13 +6,13 @@
 
 using namespace ns3;
 
-NS_LOG_COMPONENT_DEFINE ("interaction-with-ECN");
+NS_LOG_COMPONENT_DEFINE ("InteractionWithECN");
 
-class interaction-with-ECN : public ScenarioImpl
+class InteractionWithECN : public ScenarioImpl
 {
 public:
-  interaction-with-ECN (uint32_t run);
-  ~interaction-with-ECN ();
+  InteractionWithECN (uint32_t run);
+  ~InteractionWithECN ();
 
 protected:
   virtual EvaluationTopology CreateScenario (std::string aqm, bool isBql);
@@ -22,18 +22,18 @@ private:
   std::vector<uint32_t> delay;
 };
 
-interaction-with-ECN::interaction-with-ECN (uint32_t run)
+InteractionWithECN::InteractionWithECN (uint32_t run)
 {
   m_run = run;
   delay = {5, 8, 10, 16, 20, 30, 40, 60, 80, 100, 150, 200, 300, 400, 500};
 }
 
-interaction-with-ECN::~interaction-with-ECN ()
+InteractionWithECN::~InteractionWithECN ()
 {
 }
 
 EvaluationTopology
-interaction-with-ECN::CreateScenario (std::string aqm, bool isBql)
+InteractionWithECN::CreateScenario (std::string aqm, bool isBql)
 {
   double bottleneck;
   double reqDelayConstRtt;
@@ -59,7 +59,7 @@ interaction-with-ECN::CreateScenario (std::string aqm, bool isBql)
   sprintf (OWDConst, "%fms", reqDelayConstRtt);
   sprintf (scenario, "%d", m_run + 1);
   sprintf (bottleneckStr, "%fms", bottleneck);
-  std::string scenarioName = std::string ("interaction-with-ECN") + std::string (scenario);
+  std::string scenarioName = std::string ("InteractionWithECN") + std::string (scenario);
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute  ("DataRate", StringValue ("1Mbps"));
   pointToPoint.SetChannelAttribute ("Delay", StringValue (bottleneckStr));
@@ -99,7 +99,7 @@ main (int argc, char *argv[])
 
   for (uint32_t i = 0; i < 15; i++)
     {
-      interaction-with-ECN rf (i);
+      InteractionWithECN rf (i);
       rf.ConfigureQueueDisc (45, 750, "1Mbps", "2ms", QueueDiscMode,ecn);
       rf.RunSimulation (Seconds (610), isBql == "true");
     }

@@ -110,8 +110,8 @@ void RunRttFairness (std::string scenarioName)
   std::string orig;
   if(scenarioName == "RttFairness")
     orig = "RttFairness";
-  if(scenarioName == "interaction-with-ECN")
-    orig = "interaction-with-ECN";
+  if(scenarioName == "InteractionWithECN")
+    orig = "InteractionWithECN";
      
   for (uint32_t i = 1; i <= 1; i++)
     {
@@ -188,7 +188,7 @@ int main (int argc, char *argv[])
   ScenarioNumberMapping["8.2.6.1"] = "VaryingBandwidthUno";
   ScenarioNumberMapping["8.2.6.2"] = "VaryingBandwidthDuo";
   ScenarioNumberMapping["6"] = "RttFairness";
-  ScenarioNumberMapping["4.5"] = "interaction-with-ECN";
+  ScenarioNumberMapping["4.5"] = "InteractionWithECN";
 
   std::string scenarioName = "";
   std::string scenarioNumber = "";
@@ -213,11 +213,11 @@ int main (int argc, char *argv[])
       scenarioName = ScenarioNumberMapping[scenarioNumber];
     }
 
-  if (scenarioName != "All" && scenarioName != "RttFairness" && scenarioName != "interaction-with-ECN")
+  if (scenarioName != "All" && scenarioName != "RttFairness" && scenarioName != "InteractionWithECN")
     {
       RunOneScenario (scenarioName);
     }
-  else if (scenarioName != "All" && (scenarioName == "RttFairness" || scenarioName == "interaction-with-ECN"))
+  else if (scenarioName != "All" && (scenarioName == "RttFairness" || scenarioName == "InteractionWithECN"))
     {
       RunRttFairness (scenarioName);
     }
