@@ -34,6 +34,7 @@ ScenarioImpl::ScenarioImpl ()
     "ns3::NonLinearRedQueueDisc",
     "ns3::CoDelQueueDisc",
     "ns3::PieQueueDisc"
+    "ns3::EcnInteraction"
   };
   m_nAQM = 7;
 }
@@ -56,13 +57,14 @@ ScenarioImpl::DestroyTrace (EvaluationTopology et)
 }
 
 void
-ScenarioImpl::ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string linkbw, std::string linkdel, std::string mode)
+ScenarioImpl::ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string linkbw, std::string linkdel, std::string mode,bool useEcn)
 {
   Config::SetDefault ("ns3::PfifoFastQueueDisc::MaxSize", StringValue (std::to_string (limit) + "p"));
 
   Config::SetDefault ("ns3::RedQueueDisc::MeanPktSize", UintegerValue (pktsize));
   Config::SetDefault ("ns3::RedQueueDisc::LinkBandwidth", StringValue (linkbw));
   Config::SetDefault ("ns3::RedQueueDisc::LinkDelay", StringValue (linkdel));
+  Config::SetDefault ("ns3::RedQueueDisc::UseEcn", BooleanValue (useEcn));
 
   Config::SetDefault ("ns3::CoDelQueueDisc::MaxSize", StringValue (std::to_string (limit) + "p"));
   Config::SetDefault ("ns3::CoDelQueueDisc::MinBytes", UintegerValue (pktsize));
