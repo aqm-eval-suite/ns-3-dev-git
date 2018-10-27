@@ -1,0 +1,10 @@
+set terminal png
+set output "aqm-eval-output/AggressiveTransportSender/graph/AdaptiveRedQueueDisc-delay.png"
+ set xlabel "Time (Seconds)" font "Verdana,12"
+set ylabel "Delay (ms)" font "Verdana,12"
+set grid
+show grid
+set key font "Verdana,12"
+set yrange [0:]
+set xrange [:300]
+plot "aqm-eval-output/AggressiveTransportSender/data/AdaptiveRedQueueDisc-qdel.dat" using 1:2 with lines title "AdaptiveRedQueueDisc"

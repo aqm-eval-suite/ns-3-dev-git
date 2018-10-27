@@ -27,16 +27,15 @@ namespace ns3 {
 ScenarioImpl::ScenarioImpl ()
 {
   m_AQM = {
-    "ns3::PfifoFastQueueDisc",
     "ns3::RedQueueDisc",
     "ns3::AdaptiveRedQueueDisc",
     "ns3::FengAdaptiveRedQueueDisc",
     "ns3::NonLinearRedQueueDisc",
+    "ns3::PfifoFastQueueDisc",
     "ns3::CoDelQueueDisc",
     "ns3::PieQueueDisc"
-    "ns3::EcnInteraction"
-  };
-  m_nAQM = 7;
+      };
+  m_nAQM = 4;
 }
 
 ScenarioImpl::~ScenarioImpl ()
