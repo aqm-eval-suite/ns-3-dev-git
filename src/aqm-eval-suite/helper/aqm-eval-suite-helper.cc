@@ -64,6 +64,8 @@ ScenarioImpl::ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string 
   Config::SetDefault ("ns3::RedQueueDisc::LinkBandwidth", StringValue (linkbw));
   Config::SetDefault ("ns3::RedQueueDisc::LinkDelay", StringValue (linkdel));
   Config::SetDefault ("ns3::RedQueueDisc::UseEcn", BooleanValue (ecn));
+  Config::SetDefault ("ns3::RedQueueDisc::UseHardDrop", BooleanValue (!ecn));
+
   Config::SetDefault ("ns3::CoDelQueueDisc::MaxSize", StringValue (std::to_string (limit) + "p"));
   Config::SetDefault ("ns3::CoDelQueueDisc::MinBytes", UintegerValue (pktsize));
 
