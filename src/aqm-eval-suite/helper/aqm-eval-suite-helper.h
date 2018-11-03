@@ -76,8 +76,9 @@ public:
    * \param linkbw Bottleneck link bandwidth
    * \param linkdel Bottleneck link delay
    * \param mode Mode of operation for QueueDisc
+   * \param ecn ECN marking
    */
-  virtual void ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string linkbw, std::string linkdel, std::string mode,bool useEcn=false);
+  virtual void ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string linkbw, std::string linkdel, std::string mode, bool ecn = false);
 
 protected:
   /**
@@ -95,3 +96,4 @@ private:
 }
 
 #endif /* AQM_EVAL_SUITE_HELPER_H */
+

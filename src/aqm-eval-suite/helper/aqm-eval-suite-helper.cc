@@ -28,14 +28,14 @@ ScenarioImpl::ScenarioImpl ()
 {
   m_AQM = {
     "ns3::RedQueueDisc",
+    "ns3::PfifoFastQueueDisc",
     "ns3::AdaptiveRedQueueDisc",
     "ns3::FengAdaptiveRedQueueDisc",
     "ns3::NonLinearRedQueueDisc",
-    "ns3::PfifoFastQueueDisc",
     "ns3::CoDelQueueDisc",
     "ns3::PieQueueDisc"
-      };
-  m_nAQM = 4;
+  };
+  m_nAQM = 1;
 }
 
 ScenarioImpl::~ScenarioImpl ()
@@ -56,14 +56,20 @@ ScenarioImpl::DestroyTrace (EvaluationTopology et)
 }
 
 void
-ScenarioImpl::ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string linkbw, std::string linkdel, std::string mode,bool useEcn)
+ScenarioImpl::ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string linkbw, std::string linkdel, std::string mode, bool ecn)
 {
   Config::SetDefault ("ns3::PfifoFastQueueDisc::MaxSize", StringValue (std::to_string (limit) + "p"));
 
   Config::SetDefault ("ns3::RedQueueDisc::MeanPktSize", UintegerValue (pktsize));
   Config::SetDefault ("ns3::RedQueueDisc::LinkBandwidth", StringValue (linkbw));
   Config::SetDefault ("ns3::RedQueueDisc::LinkDelay", StringValue (linkdel));
-  Config::SetDefault ("ns3::RedQueueDisc::UseEcn", BooleanValue (useEcn));
+
+  if (ecn)
+    {
+      Config::SetDefault ("ns3::RedQueueDisc::UseEcn", BooleanValue (ecn));
+      Config::SetDefault ("ns3::RedQueueDisc::UseHardDrop", BooleanValue (false));
+      Config::SetDefault ("ns3::TcpSocketBase::EcnMode", StringValue ("ClassicEcn"));
+    }
 
   Config::SetDefault ("ns3::CoDelQueueDisc::MaxSize", StringValue (std::to_string (limit) + "p"));
   Config::SetDefault ("ns3::CoDelQueueDisc::MinBytes", UintegerValue (pktsize));
@@ -102,3 +108,4 @@ ScenarioImpl::RunSimulation (Time simtime, bool isBql)
 }
 
 } //namespace ns3
+

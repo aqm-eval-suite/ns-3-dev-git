@@ -33,6 +33,12 @@ using namespace ns3;
 
 std::vector<std::string> AQM = {
 "Red",
+<<<<<<< HEAD
+=======
+"PfifoFast",
+"CoDel",
+"Pie",
+>>>>>>> master
 "AdaptiveRed",
 "FengAdaptiveRed",
 "NonLinearRed",
@@ -41,7 +47,11 @@ std::vector<std::string> AQM = {
 "Pie"
 };
 std::string queueDisc = "QueueDisc";
+<<<<<<< HEAD
 uint32_t nAQM = 4;
+=======
+uint32_t nAQM = 1;
+>>>>>>> master
 std::string AggressiveTcp = "";
 std::string QueueDiscMode = "QUEUE_DISC_MODE_PACKETS";
 std::string isBql = "false"; 
@@ -108,10 +118,18 @@ void RunOneScenario (std::string scenarioName)
 void RunRttFairness (std::string scenarioName)
 {
   std::string orig;
+<<<<<<< HEAD
  if(scenarioName == "RttFairness")
 	orig="RttFairness";
  if(scenarioName == "EcnInteraction")
 	orig=="EcnInteraction";
+=======
+  if(scenarioName == "RttFairness")
+    orig = "RttFairness";
+  if(scenarioName == "InteractionWithECN")
+    orig = "InteractionWithECN";
+     
+>>>>>>> master
   for (uint32_t i = 1; i <= 15; i++)
     {
       char sce[20];
@@ -121,6 +139,7 @@ void RunRttFairness (std::string scenarioName)
       mkdir ((std::string ("aqm-eval-output/") + scenarioName + std::string ("/data")).c_str (), 0700);
       mkdir ((std::string ("aqm-eval-output/") + scenarioName + std::string ("/graph")).c_str (), 0700);
     }
+<<<<<<< HEAD
  if(scenarioName == "RttFairness"){
   std::string commandToRun = std::string ("./waf --run \"RttFairness") + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string (" --isBql=") + isBql + std::string ("\"");
   system (commandToRun.c_str ());
@@ -130,6 +149,11 @@ void RunRttFairness (std::string scenarioName)
   system (commandToRun.c_str ());
  }
   for (uint32_t i = 1; i <= 15; i++)
+=======
+  std::string commandToRun = std::string ("./waf --run \"")+ orig + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string (" --isBql=") + isBql + std::string ("\"");
+  system (commandToRun.c_str ());
+  for (uint32_t i = 1; i <=15; i++)
+>>>>>>> master
     {
       char sce[20];
       sprintf (sce, "%d", i);
@@ -193,7 +217,11 @@ int main (int argc, char *argv[])
   ScenarioNumberMapping["8.2.6.1"] = "VaryingBandwidthUno";
   ScenarioNumberMapping["8.2.6.2"] = "VaryingBandwidthDuo";
   ScenarioNumberMapping["6"] = "RttFairness";
+<<<<<<< HEAD
   ScenarioNumberMapping["4.5"]="EcnInteraction";
+=======
+  ScenarioNumberMapping["4.5"] = "InteractionWithECN";
+>>>>>>> master
 
   std::string scenarioName = "";
   std::string scenarioNumber = "";
@@ -218,18 +246,31 @@ int main (int argc, char *argv[])
       scenarioName = ScenarioNumberMapping[scenarioNumber];
     }
 
+<<<<<<< HEAD
   if (scenarioName != "All" && (scenarioName != "RttFairness" || scenarioName != "EcnInteraction"))
     {
       RunOneScenario (scenarioName);
     }
   else if (scenarioName != "All" && (scenarioName == "RttFairness"|| scenarioName == "EcnInteraction"))
+=======
+  if (scenarioName != "All" && scenarioName != "RttFairness" && scenarioName != "InteractionWithECN")
+    {
+      RunOneScenario (scenarioName);
+    }
+  else if (scenarioName != "All" && (scenarioName == "RttFairness" || scenarioName == "InteractionWithECN"))
+>>>>>>> master
     {
       RunRttFairness (scenarioName);
     }
   else
     {
+<<<<<<< HEAD
       RunRttFairness ("EcnInteraction");
       RunRttFairness ("RttFairness");
+=======
+      RunRttFairness ("RttFairness");
+      RunRttFairness ("InteractionWithECN");
+>>>>>>> master
       for (std::map<std::string, std::string>::iterator it = ScenarioNumberMapping.begin (); it != ScenarioNumberMapping.end (); ++it)
         {
           if (it->second != "RttFairness")

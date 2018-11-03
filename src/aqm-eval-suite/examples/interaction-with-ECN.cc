@@ -1,29 +1,3 @@
-/* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
-/*
- * Copyright (c) 2017 NITK Surathkal
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 as
- * published by the Free Software Foundation;
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * Authors: Ankit Deepak <adadeepak8@gmail.com>
- *          Shravya K. S. <shravya.ks0@gmail.com>
- *          Mohit P. Tahiliani <tahiliani@nitk.edu.in>
- */
-
-/*
- * This example is equivalent to the scenario described in Section 6.2
- * of RFC 7928 (https://tools.ietf.org/html/rfc7928#section-6.2).
- */
 
 #include "ns3/log.h"
 #include "ns3/simulator.h"
@@ -32,13 +6,13 @@
 
 using namespace ns3;
 
-NS_LOG_COMPONENT_DEFINE ("EcnInteraction");
+NS_LOG_COMPONENT_DEFINE ("InteractionWithECN");
 
-class EcnInteraction : public ScenarioImpl
+class InteractionWithECN : public ScenarioImpl
 {
 public:
-  EcnInteraction (uint32_t run);
-  ~EcnInteraction ();
+  InteractionWithECN (uint32_t run);
+  ~InteractionWithECN ();
 
 protected:
   virtual EvaluationTopology CreateScenario (std::string aqm, bool isBql);
@@ -48,18 +22,18 @@ private:
   std::vector<uint32_t> delay;
 };
 
-EcnInteraction::EcnInteraction (uint32_t run)
+InteractionWithECN::InteractionWithECN (uint32_t run)
 {
   m_run = run;
   delay = {5, 8, 10, 16, 20, 30, 40, 60, 80, 100, 150, 200, 300, 400, 500};
 }
 
-EcnInteraction::~EcnInteraction ()
+InteractionWithECN::~InteractionWithECN ()
 {
 }
 
 EvaluationTopology
-EcnInteraction::CreateScenario (std::string aqm, bool isBql)
+InteractionWithECN::CreateScenario (std::string aqm, bool isBql)
 {
   double bottleneck;
   double reqDelayConstRtt;
@@ -85,7 +59,7 @@ EcnInteraction::CreateScenario (std::string aqm, bool isBql)
   sprintf (OWDConst, "%fms", reqDelayConstRtt);
   sprintf (scenario, "%d", m_run + 1);
   sprintf (bottleneckStr, "%fms", bottleneck);
-  std::string scenarioName = std::string ("EcnInteraction") + std::string (scenario);
+  std::string scenarioName = std::string ("InteractionWithECN") + std::string (scenario);
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute  ("DataRate", StringValue ("1Mbps"));
   pointToPoint.SetChannelAttribute ("Delay", StringValue (bottleneckStr));
@@ -115,9 +89,9 @@ EcnInteraction::CreateScenario (std::string aqm, bool isBql)
 int
 main (int argc, char *argv[])
 {
+  bool ecn = true;
   std::string QueueDiscMode = "";
   std::string isBql = "";
-  bool useEcn = true;
   CommandLine cmd;
   cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
   cmd.AddValue ("isBql", "Enables/Disables Byte Queue Limits", isBql);
@@ -125,8 +99,8 @@ main (int argc, char *argv[])
 
   for (uint32_t i = 0; i < 15; i++)
     {
-      EcnInteraction ei (i);
-      ei.ConfigureQueueDisc (45, 750, "1Mbps", "2ms", QueueDiscMode,useEcn);
-      ei.RunSimulation (Seconds (610), isBql == "true");
+      InteractionWithECN rf (i);
+      rf.ConfigureQueueDisc (45, 750, "1Mbps", "2ms", QueueDiscMode,ecn);
+      rf.RunSimulation (Seconds (610), isBql == "true");
     }
 }
