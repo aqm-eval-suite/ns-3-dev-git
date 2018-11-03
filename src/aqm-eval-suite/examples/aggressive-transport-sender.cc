@@ -79,6 +79,7 @@ main (int argc, char *argv[])
   std::string QueueDiscMode = "";
   std::string TcpVariant = "";
   std::string isBql = "";
+  bool ecn = false;
   CommandLine cmd;
   cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
   cmd.AddValue ("TcpVariant", "Aggressive TCP variant", TcpVariant);
@@ -89,6 +90,6 @@ main (int argc, char *argv[])
       AggressiveTcpVariant = TcpVariant;
     }
   AggressiveTransportSender sce;
-  sce.ConfigureQueueDisc (45, 750, "1Mbps", "48ms", QueueDiscMode);
+  sce.ConfigureQueueDisc (45, 750, "1Mbps", "48ms", QueueDiscMode,ecn);
   sce.RunSimulation (Seconds (310), isBql == "true");
 }

@@ -6,8 +6,6 @@ set ylabel "Goodput (Mbps)" font "Verdana"
 set xrange[] reverse
 set grid
 show grid
-set label "" at 50.088985730296265,0.8121450662276379 point lt 1 pt 1 center font "Verdana"  tc lt 1 offset 1.5,0.4
+set label "" at 52.432351334262854,0.8026246812192391 point lt 1 pt 1 center font "Verdana"  tc lt 1 offset 1.5,0.4
 set label "RED" at graph 1.03,0.96 point lt 1 pt 1 font "Verdana,12"  tc lt 1 offset 0.7, -0.2
-set label "" at 20.547348487102212,0.7554564499276403 point lt 2 pt 2 center font "Verdana"  tc lt 2 offset 1.5,0.4
-set label "ARED" at graph 1.03,0.9 point lt 2 pt 2 font "Verdana,12"  tc lt 2 offset 0.7, -0.2
-plot "aqm-eval-output/AggressiveTransportSender/data/RedQueueDisc-ellipse.dat" notitle with lines,"aqm-eval-output/AggressiveTransportSender/data/AdaptiveRedQueueDisc-ellipse.dat" notitle with lines,"aqm-eval-output/AggressiveTransportSender/data/FengAdaptiveRedQueueDisc-ellipse.dat" notitle with lines,"aqm-eval-output/AggressiveTransportSender/data/NonLinearRedQueueDisc-ellipse.dat" notitle with lines
+plot "aqm-eval-output/AggressiveTransportSender/data/RedQueueDisc-ellipse.dat" notitle with lines

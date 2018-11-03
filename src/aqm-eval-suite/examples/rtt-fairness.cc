@@ -117,6 +117,7 @@ main (int argc, char *argv[])
 {
   std::string QueueDiscMode = "";
   std::string isBql = "";
+  bool ecn = false;
   CommandLine cmd;
   cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
   cmd.AddValue ("isBql", "Enables/Disables Byte Queue Limits", isBql);
@@ -125,7 +126,7 @@ main (int argc, char *argv[])
   for (uint32_t i = 0; i < 15; i++)
     {
       RttFairness rf (i);
-      rf.ConfigureQueueDisc (45, 750, "1Mbps", "2ms", QueueDiscMode);
+      rf.ConfigureQueueDisc (45, 750, "1Mbps", "2ms", QueueDiscMode,ecn);
       rf.RunSimulation (Seconds (610), isBql == "true");
     }
 }

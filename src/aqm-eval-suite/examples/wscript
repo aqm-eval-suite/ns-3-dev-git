@@ -48,5 +48,3 @@ def build(bld):
     obj = bld.create_ns3_program('aqm-eval-suite-runner', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
     obj.source = 'aqm-eval-suite-runner.cc'
 
-    obj = bld.create_ns3_program('EcnInteraction', ['aqm-eval-suite','core', 'internet', 'point-to-point', 'applications', 'point-to-point-layout'])
-    obj.source = 'ecn-interaction.cc'

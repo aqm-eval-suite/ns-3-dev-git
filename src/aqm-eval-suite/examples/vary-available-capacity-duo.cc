@@ -114,12 +114,13 @@ main (int argc, char *argv[])
 {
   std::string QueueDiscMode = "";
   std::string isBql = "";
+  bool ecn = false;
   CommandLine cmd;
   cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
   cmd.AddValue ("isBql", "Enables/Disables Byte Queue Limits", isBql);
   cmd.Parse (argc, argv);
 
   VaryingBandwidthDuo sce;
-  sce.ConfigureQueueDisc (500, 750, "100Mbps", "48ms", QueueDiscMode);
+  sce.ConfigureQueueDisc (500, 750, "100Mbps", "48ms", QueueDiscMode,ecn);
   sce.RunSimulation (Seconds (310), isBql == "true");
 }
