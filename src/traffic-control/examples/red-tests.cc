@@ -324,13 +324,7 @@ main (int argc, char *argv[])
   Config::SetDefault ("ns3::RedQueueDisc::QW", DoubleValue (0.002));
   Config::SetDefault ("ns3::RedQueueDisc::MinTh", DoubleValue (5));
   Config::SetDefault ("ns3::RedQueueDisc::MaxTh", DoubleValue (15));
-
-      Config::SetDefault ("ns3::TcpSocketBase::EcnMode", StringValue ("ClassicEcn"));
-      Config::SetDefault ("ns3::RedQueueDisc::UseEcn", BooleanValue (true));
-Config::SetDefault ("ns3::RedQueueDisc::UseHardDrop", BooleanValue (true));
-
-
-
+  
   if (redTest == 3) // test like 1, but with bad params
     {
       Config::SetDefault ("ns3::RedQueueDisc::MaxTh", DoubleValue (10));
