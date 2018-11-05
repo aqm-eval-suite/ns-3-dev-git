@@ -35,7 +35,7 @@ ScenarioImpl::ScenarioImpl ()
     "ns3::CoDelQueueDisc",
     "ns3::PieQueueDisc"
   };
-  m_nAQM = 1;
+  m_nAQM = 7;
 }
 
 ScenarioImpl::~ScenarioImpl ()
