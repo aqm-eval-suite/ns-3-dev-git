@@ -78,7 +78,7 @@ public:
    * \param mode Mode of operation for QueueDisc
    * \param ecn ECN marking
    */
-  virtual void ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string linkbw, std::string linkdel, std::string mode, bool ecn = false);
+  virtual void ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string linkbw, std::string linkdel, std::string mode, bool ecn);
 
 protected:
   /**
@@ -96,3 +96,4 @@ private:
 }
 
 #endif /* AQM_EVAL_SUITE_HELPER_H */
+
