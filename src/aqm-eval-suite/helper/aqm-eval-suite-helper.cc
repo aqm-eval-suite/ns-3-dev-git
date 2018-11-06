@@ -68,6 +68,7 @@ ScenarioImpl::ConfigureQueueDisc (uint32_t limit, uint32_t pktsize, std::string 
     {
       Config::SetDefault ("ns3::RedQueueDisc::UseEcn", BooleanValue (ecn));
       Config::SetDefault ("ns3::RedQueueDisc::UseHardDrop", BooleanValue (false));
+
       Config::SetDefault ("ns3::TcpSocketBase::EcnMode", StringValue ("ClassicEcn"));
     }
 

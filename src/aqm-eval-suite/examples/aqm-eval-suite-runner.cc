@@ -107,11 +107,7 @@ void RunOneScenario (std::string scenarioName)
 
 void RunRttFairness (std::string scenarioName)
 {
-  std::string orig;
-  if(scenarioName == "RttFairness")
-    orig = "RttFairness";
-  if(scenarioName == "InteractionWithECN")
-    orig = "InteractionWithECN";
+  std::string orig = scenarioName;
      
   for (uint32_t i = 1; i <= 15; i++)
     {
@@ -175,20 +171,20 @@ int main (int argc, char *argv[])
 {
   mkdir ("aqm-eval-output", 0700);
   std::map<std::string, std::string> ScenarioNumberMapping;
+  ScenarioNumberMapping["4.5"] = "RttFairnessWithEcn";
   ScenarioNumberMapping["5.1.1"] = "TCPFriendlySameInitCwnd";
   ScenarioNumberMapping["5.1.2"] = "TCPFriendlyDifferentInitCwnd";
   ScenarioNumberMapping["5.2"] = "AggressiveTransportSender";
   ScenarioNumberMapping["5.3.1"] = "UnresponsiveTransport";
   ScenarioNumberMapping["5.3.2"] = "UnresponsiveWithFriendly";
   ScenarioNumberMapping["5.4"] = "LbeTransportSender";
+  ScenarioNumberMapping["6"] = "RttFairness";
   ScenarioNumberMapping["8.2.2"] = "MildCongestion";
   ScenarioNumberMapping["8.2.3"] = "MediumCongestion";
   ScenarioNumberMapping["8.2.4"] = "HeavyCongestion";
   ScenarioNumberMapping["8.2.5"] = "VaryingCongestion";
   ScenarioNumberMapping["8.2.6.1"] = "VaryingBandwidthUno";
   ScenarioNumberMapping["8.2.6.2"] = "VaryingBandwidthDuo";
-  ScenarioNumberMapping["6"] = "RttFairness";
-  ScenarioNumberMapping["4.5"] = "InteractionWithECN";
 
   std::string scenarioName = "";
   std::string scenarioNumber = "";
@@ -213,21 +209,21 @@ int main (int argc, char *argv[])
       scenarioName = ScenarioNumberMapping[scenarioNumber];
     }
 
-  if (scenarioName != "All" && scenarioName != "RttFairness" && scenarioName != "InteractionWithECN")
+  if (scenarioName != "All" && scenarioName != "RttFairness" && scenarioName != "RttFairnessWithEcn")
     {
       RunOneScenario (scenarioName);
     }
-  else if (scenarioName != "All" && (scenarioName == "RttFairness" || scenarioName == "InteractionWithECN"))
+  else if (scenarioName != "All" && (scenarioName == "RttFairness" || scenarioName == "RttFairnessWithEcn"))
     {
       RunRttFairness (scenarioName);
     }
   else
     {
       RunRttFairness ("RttFairness");
-      RunRttFairness ("InteractionWithECN");
+      RunRttFairness ("RttFairnessWithEcn");
       for (std::map<std::string, std::string>::iterator it = ScenarioNumberMapping.begin (); it != ScenarioNumberMapping.end (); ++it)
         {
-          if (it->second != "RttFairness" && it->second != "InteractionWithECN")
+          if (it->second != "RttFairness" && it->second != "RttFairnessWithEcn")
             {
               RunOneScenario (it->second);
             }
