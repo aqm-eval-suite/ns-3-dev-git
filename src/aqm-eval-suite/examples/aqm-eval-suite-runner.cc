@@ -227,7 +227,7 @@ int main (int argc, char *argv[])
       RunRttFairness ("InteractionWithECN");
       for (std::map<std::string, std::string>::iterator it = ScenarioNumberMapping.begin (); it != ScenarioNumberMapping.end (); ++it)
         {
-          if (it->second != "RttFairness")
+          if (it->second != "RttFairness" && it->second != "InteractionWithECN")
             {
               RunOneScenario (it->second);
             }
