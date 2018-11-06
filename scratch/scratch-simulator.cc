@@ -25,7 +25,7 @@ main (int argc, char *argv[])
 {
   NS_LOG_UNCOND ("Scratch Simulator");
 
-#pragma omp parallel
+
 for(int i=0; i<5; i++)
     NS_LOG_UNCOND ("Scratch Simulator");
 
