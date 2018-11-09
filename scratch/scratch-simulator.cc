@@ -15,7 +15,6 @@
  */
 
 #include "ns3/core-module.h"
-#include <omp.h>
 using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE ("ScratchSimulator");
