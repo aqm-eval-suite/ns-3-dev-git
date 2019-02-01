@@ -32,10 +32,10 @@
 using namespace ns3;
 
 std::vector<std::string> AQM = {
+"Red",
 "PfifoFast",
 "CoDel",
 "Pie",
-"Red",
 "AdaptiveRed",
 "FengAdaptiveRed",
 "NonLinearRed"
@@ -107,7 +107,8 @@ void RunOneScenario (std::string scenarioName)
 
 void RunRttFairness (std::string scenarioName)
 {
-  std::string orig = "RttFairness";
+  std::string orig = scenarioName;
+     
   for (uint32_t i = 1; i <= 15; i++)
     {
       char sce[20];
@@ -117,9 +118,9 @@ void RunRttFairness (std::string scenarioName)
       mkdir ((std::string ("aqm-eval-output/") + scenarioName + std::string ("/data")).c_str (), 0700);
       mkdir ((std::string ("aqm-eval-output/") + scenarioName + std::string ("/graph")).c_str (), 0700);
     }
-  std::string commandToRun = std::string ("./waf --run \"RttFairness") + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string (" --isBql=") + isBql + std::string ("\"");
+  std::string commandToRun = std::string ("./waf --run \"")+ orig + std::string (" --QueueDiscMode=") + QueueDiscMode + std::string (" --isBql=") + isBql + std::string ("\"");
   system (commandToRun.c_str ());
-  for (uint32_t i = 1; i <= 15; i++)
+  for (uint32_t i = 1; i <=15; i++)
     {
       char sce[20];
       sprintf (sce, "%d", i);
@@ -170,19 +171,20 @@ int main (int argc, char *argv[])
 {
   mkdir ("aqm-eval-output", 0700);
   std::map<std::string, std::string> ScenarioNumberMapping;
+  ScenarioNumberMapping["4.5"] = "RttFairnessWithEcn";
   ScenarioNumberMapping["5.1.1"] = "TCPFriendlySameInitCwnd";
   ScenarioNumberMapping["5.1.2"] = "TCPFriendlyDifferentInitCwnd";
   ScenarioNumberMapping["5.2"] = "AggressiveTransportSender";
   ScenarioNumberMapping["5.3.1"] = "UnresponsiveTransport";
   ScenarioNumberMapping["5.3.2"] = "UnresponsiveWithFriendly";
   ScenarioNumberMapping["5.4"] = "LbeTransportSender";
+  ScenarioNumberMapping["6"] = "RttFairness";
   ScenarioNumberMapping["8.2.2"] = "MildCongestion";
   ScenarioNumberMapping["8.2.3"] = "MediumCongestion";
   ScenarioNumberMapping["8.2.4"] = "HeavyCongestion";
   ScenarioNumberMapping["8.2.5"] = "VaryingCongestion";
   ScenarioNumberMapping["8.2.6.1"] = "VaryingBandwidthUno";
   ScenarioNumberMapping["8.2.6.2"] = "VaryingBandwidthDuo";
-  ScenarioNumberMapping["6"] = "RttFairness";
 
   std::string scenarioName = "";
   std::string scenarioNumber = "";
@@ -207,23 +209,25 @@ int main (int argc, char *argv[])
       scenarioName = ScenarioNumberMapping[scenarioNumber];
     }
 
-  if (scenarioName != "All" && scenarioName != "RttFairness")
+  if (scenarioName != "All" && scenarioName != "RttFairness" && scenarioName != "RttFairnessWithEcn")
     {
       RunOneScenario (scenarioName);
     }
-  else if (scenarioName != "All" && scenarioName == "RttFairness")
+  else if (scenarioName != "All" && (scenarioName == "RttFairness" || scenarioName == "RttFairnessWithEcn"))
     {
       RunRttFairness (scenarioName);
     }
   else
     {
-      RunRttFairness (scenarioName);
+      RunRttFairness ("RttFairness");
+      RunRttFairness ("RttFairnessWithEcn");
       for (std::map<std::string, std::string>::iterator it = ScenarioNumberMapping.begin (); it != ScenarioNumberMapping.end (); ++it)
         {
-          if (it->second != "RttFairness")
+          if (it->second != "RttFairness" && it->second != "RttFairnessWithEcn")
             {
               RunOneScenario (it->second);
             }
         }
     }
 }
+

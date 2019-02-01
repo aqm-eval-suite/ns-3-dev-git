@@ -162,9 +162,6 @@ Scope and limitations of the suite
 
 * Scenarios listed in Section 7 and 9 are not yet supported.
 
-* Currently, the suite cannot be used to study the interaction of queue disciplines
-  with Explicit Congestion Notification (ECN) and Scheduling Algorithms.
-
 * Multi-AQM scenarios are not yet supported.
 
 Packages Required for Processing Metrics and Graphing

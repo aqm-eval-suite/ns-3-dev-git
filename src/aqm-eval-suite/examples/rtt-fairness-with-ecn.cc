@@ -1,6 +1,6 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
- * Copyright (c) 2017 NITK Surathkal
+ * Copyright (c) 2018 NITK Surathkal
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -15,14 +15,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
- * Authors: Ankit Deepak <adadeepak8@gmail.com>
- *          Shravya K. S. <shravya.ks0@gmail.com>
+ * Authors: Ajumal P A <ajupazhamayil@gmail.com>
+ *          Ananthakrishnan S <ananthakrishnan190@gmail.com>
  *          Mohit P. Tahiliani <tahiliani@nitk.edu.in>
  */
 
 /*
- * This example is equivalent to the scenario described in Section 6.2
- * of RFC 7928 (https://tools.ietf.org/html/rfc7928#section-6.2).
+ * This example is equivalent to the scenario described in Section 4.5
+ * of RFC 7928 (https://tools.ietf.org/html/rfc7928#section-4.5).
  */
 
 #include "ns3/log.h"
@@ -32,13 +32,13 @@
 
 using namespace ns3;
 
-NS_LOG_COMPONENT_DEFINE ("RttFairness");
+NS_LOG_COMPONENT_DEFINE ("RttFairnessWithEcn");
 
-class RttFairness : public ScenarioImpl
+class RttFairnessWithEcn : public ScenarioImpl
 {
 public:
-  RttFairness (uint32_t run);
-  ~RttFairness ();
+  RttFairnessWithEcn (uint32_t run);
+  ~RttFairnessWithEcn ();
 
 protected:
   virtual EvaluationTopology CreateScenario (std::string aqm, bool isBql);
@@ -48,18 +48,18 @@ private:
   std::vector<uint32_t> delay;
 };
 
-RttFairness::RttFairness (uint32_t run)
+RttFairnessWithEcn::RttFairnessWithEcn (uint32_t run)
 {
   m_run = run;
   delay = {5, 8, 10, 16, 20, 30, 40, 60, 80, 100, 150, 200, 300, 400, 500};
 }
 
-RttFairness::~RttFairness ()
+RttFairnessWithEcn::~RttFairnessWithEcn ()
 {
 }
 
 EvaluationTopology
-RttFairness::CreateScenario (std::string aqm, bool isBql)
+RttFairnessWithEcn::CreateScenario (std::string aqm, bool isBql)
 {
   double bottleneck;
   double reqDelayConstRtt;
@@ -85,7 +85,7 @@ RttFairness::CreateScenario (std::string aqm, bool isBql)
   sprintf (OWDConst, "%fms", reqDelayConstRtt);
   sprintf (scenario, "%d", m_run + 1);
   sprintf (bottleneckStr, "%fms", bottleneck);
-  std::string scenarioName = std::string ("RttFairness") + std::string (scenario);
+  std::string scenarioName = std::string ("RttFairnessWithEcn") + std::string (scenario);
   PointToPointHelper pointToPoint;
   pointToPoint.SetDeviceAttribute  ("DataRate", StringValue ("1Mbps"));
   pointToPoint.SetChannelAttribute ("Delay", StringValue (bottleneckStr));
@@ -115,9 +115,9 @@ RttFairness::CreateScenario (std::string aqm, bool isBql)
 int
 main (int argc, char *argv[])
 {
+  bool ecn = true;
   std::string QueueDiscMode = "";
   std::string isBql = "";
-  bool ecn = false;
   CommandLine cmd;
   cmd.AddValue ("QueueDiscMode", "Determines the unit for QueueLimit", QueueDiscMode);
   cmd.AddValue ("isBql", "Enables/Disables Byte Queue Limits", isBql);
@@ -125,7 +125,7 @@ main (int argc, char *argv[])
 
   for (uint32_t i = 0; i < 15; i++)
     {
-      RttFairness rf (i);
+      RttFairnessWithEcn rf (i);
       rf.ConfigureQueueDisc (45, 750, "1Mbps", "2ms", QueueDiscMode,ecn);
       rf.RunSimulation (Seconds (610), isBql == "true");
     }

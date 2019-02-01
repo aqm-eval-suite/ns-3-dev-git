@@ -119,7 +119,7 @@ BuildAppsTest (uint32_t test)
       clientHelper1.SetAttribute ("OnTime", StringValue ("ns3::ConstantRandomVariable[Constant=1]"));
       clientHelper1.SetAttribute ("OffTime", StringValue ("ns3::ConstantRandomVariable[Constant=0]"));
       clientHelper1.SetAttribute 
-        ("DataRate", DataRateValue (DataRate ("10Mb/s")));
+        ("DataRate", DataRateValue (DataRate ("100Mb/s")));
       clientHelper1.SetAttribute 
         ("PacketSize", UintegerValue (1000));
 
@@ -324,7 +324,7 @@ main (int argc, char *argv[])
   Config::SetDefault ("ns3::RedQueueDisc::QW", DoubleValue (0.002));
   Config::SetDefault ("ns3::RedQueueDisc::MinTh", DoubleValue (5));
   Config::SetDefault ("ns3::RedQueueDisc::MaxTh", DoubleValue (15));
-
+  
   if (redTest == 3) // test like 1, but with bad params
     {
       Config::SetDefault ("ns3::RedQueueDisc::MaxTh", DoubleValue (10));
