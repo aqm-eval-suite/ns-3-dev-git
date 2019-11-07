@@ -108,22 +108,10 @@ TrafficControlHelper::TrafficControlHelper ()
 }
 
 TrafficControlHelper
-TrafficControlHelper::Default (std::size_t nTxQueues)
+TrafficControlHelper::Default (void)
 {
-  NS_LOG_FUNCTION (nTxQueues);
-  NS_ABORT_MSG_IF (nTxQueues == 0, "The device must have at least one queue");
   TrafficControlHelper helper;
-
-  if (nTxQueues == 1)
-    {
-      helper.SetRootQueueDisc ("ns3::FqCoDelQueueDisc");
-    }
-  else
-    {
-      uint16_t handle = helper.SetRootQueueDisc ("ns3::MqQueueDisc");
-      ClassIdList cls = helper.AddQueueDiscClasses (handle, nTxQueues, "ns3::QueueDiscClass");
-      helper.AddChildQueueDiscs (handle, cls, "ns3::FqCoDelQueueDisc");
-    }
+  helper.SetRootQueueDisc ("ns3::PfifoFastQueueDisc");
   return helper;
 }
 

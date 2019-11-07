@@ -38,10 +38,11 @@ std::vector<std::string> AQM = {
 "Red",
 "AdaptiveRed",
 "FengAdaptiveRed",
-"NonLinearRed"
+"NonLinearRed",
+"Cobalt"
 };
 std::string queueDisc = "QueueDisc";
-uint32_t nAQM = 7;
+uint32_t nAQM = 8;
 std::string AggressiveTcp = "";
 std::string QueueDiscMode = "QUEUE_DISC_MODE_PACKETS";
 std::string isBql = "false"; 

@@ -1,0 +1,8 @@
+set terminal png
+set output "aqm-eval-output/AggressiveTransportSender/graph/RedQueueDisc-goodput.png"
+ set xlabel "Time (Seconds)" font "Verdana,12"
+set ylabel "Goodput (Mbps)" font "Verdana,12"
+set grid
+show grid
+set key font "Verdana,12"
+plot "aqm-eval-output/AggressiveTransportSender/data/new-RedQueueDisc-goodput.dat" i 0 using 1:2 with lines smooth csplines title "Flow 1"
