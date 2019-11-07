@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import sys;
+import sys
 import numpy as np
 
 samples = []
@@ -9,37 +9,43 @@ scenario_name = sys.argv[1]
 queuedisc_name = sys.argv[2]
 queuedisc_index = sys.argv[3]
 
-input_file = open("aqm-eval-output/"+scenario_name+"/data/"+queuedisc_name+"-result.dat", "r") 
+input_file = open("aqm-eval-output/"+scenario_name +
+                  "/data/"+queuedisc_name+"-result.dat", "r")
 lines = input_file.readlines()
 
-output_file_name = "aqm-eval-output/"+scenario_name+"/data/"+queuedisc_name+"-ellipse.dat"
-output_file = open(output_file_name, "w") 
+output_file_name = "aqm-eval-output/"+scenario_name + \
+    "/data/"+queuedisc_name+"-ellipse.dat"
+output_file = open(output_file_name, "w")
 
-qdisc_label = {'PfifoFast': 'DropTail', 'CoDel': 'CoDel', 'Pie': 'PIE', 'Red': 'RED',  'AdaptiveRed': 'ARED', 'FengAdaptiveRed': 'FRED', 'NonLinearRed':'NLRED'}
+qdisc_label = {'PfifoFast': 'DropTail', 'CoDel': 'CoDel', 'Pie': 'PIE', 'Red': 'RED',
+               'AdaptiveRed': 'ARED', 'FengAdaptiveRed': 'FRED', 'NonLinearRed': 'NLRED', 'Cobalt': 'Cobalt'}
 
 for line in lines:
-    fields = line.split( ' ' )
-    delay, throughput = (float(fields[ 0 ]))/1000.0, (float(fields[ 1 ]))/(1024.0*128.0)
-    samples.append( [ delay, throughput ] )
+    fields = line.split(' ')
+    delay, throughput = (float(fields[0])) / \
+        1000.0, (float(fields[1]))/(1024.0*128.0)
+    samples.append([delay, throughput])
 
-samples = np.matrix( samples )
+samples = np.matrix(samples)
 
 # taken from https://github.com/joferkington/oost_paper_code/blob/master/error_ellipse.py
+
 
 def get_ellipse(points, nstd=1):
     def eigsorted(cov):
         vals, vecs = np.linalg.eigh(cov)
         order = vals.argsort()[::-1]
-        return vals[order], vecs[:,order]
+        return vals[order], vecs[:, order]
 
     cov = np.cov(points, rowvar=False)
     vals, vecs = eigsorted(cov)
-    theta = np.degrees(np.arctan2(*vecs[:,0][::-1]))
+    theta = np.degrees(np.arctan2(*vecs[:, 0][::-1]))
     # Width and height are "full" widths, not radius
 #    width, height = 2 * nstd * np.sqrt(vals)
-    width = nstd[0,0] * np.sqrt(vals[0])
-    height = nstd[0,1] * np.sqrt(vals[1])
-    return [ width, height, theta ]
+    width = nstd[0, 0] * np.sqrt(vals[0])
+    height = nstd[0, 1] * np.sqrt(vals[1])
+    return [width, height, theta]
+
 
 def get_ellipse_coords(a=0.0, b=0.0, x=0.0, y=0.0, angle=0.0, k=2):
     """ Draws an ellipse using (360*k + 1) discrete points; based on pseudo code
@@ -66,21 +72,24 @@ def get_ellipse_coords(a=0.0, b=0.0, x=0.0, y=0.0, angle=0.0, k=2):
 
     return pts
 
-means = np.mean( samples, axis=0 )
-center_x = means[ 0, 0 ]
-center_y = means[ 0, 1 ]
-width, height, theta = get_ellipse( samples, np.std( samples, axis=0 ))
 
-#print center_x, center_y
-#print width, height, theta
+means = np.mean(samples, axis=0)
+center_x = means[0, 0]
+center_y = means[0, 1]
+width, height, theta = get_ellipse(samples, np.std(samples, axis=0))
 
-for i in get_ellipse_coords(width, height, center_x, center_y, -theta, 10 ):
-    output_file.write(str(i[ 0 ]*1000.0)+' '+str(i[ 1 ])+'\n')
+# print center_x, center_y
+# print width, height, theta
+
+for i in get_ellipse_coords(width, height, center_x, center_y, -theta, 10):
+    output_file.write(str(i[0]*1000.0)+' '+str(i[1])+'\n')
 
 output_file.close()
 input_file.close()
 
-gnu_file = open("aqm-eval-output/"+scenario_name+"/data/plot-shell", "a") 
-gnu_file.write ("set label \"\" at "+str(center_x*1000.0)+","+str(center_y)+" point lt "+queuedisc_index+" pt "+queuedisc_index+" center font \"Verdana\"  tc lt "+queuedisc_index+" offset 1.5,0.4\n")
-gnu_file.write ("set label \""+qdisc_label[queuedisc_name[:-9]]+"\" at graph "+str(1.03)+","+str(0.96 - (0.06 * (float(queuedisc_index) - 1)))+" point lt "+queuedisc_index+" pt "+queuedisc_index+" font \"Verdana,12\"  tc lt "+queuedisc_index+" offset 0.7, -0.2\n")
+gnu_file = open("aqm-eval-output/"+scenario_name+"/data/plot-shell", "a")
+gnu_file.write("set label \"\" at "+str(center_x*1000.0)+","+str(center_y)+" point lt "+queuedisc_index +
+               " pt "+queuedisc_index+" center font \"Verdana\"  tc lt "+queuedisc_index+" offset 1.5,0.4\n")
+gnu_file.write("set label \""+qdisc_label[queuedisc_name[:-9]]+"\" at graph "+str(1.03)+","+str(0.96 - (0.06 * (float(queuedisc_index) - 1))
+                                                                                                )+" point lt "+queuedisc_index+" pt "+queuedisc_index+" font \"Verdana,12\"  tc lt "+queuedisc_index+" offset 0.7, -0.2\n")
 gnu_file.close()
